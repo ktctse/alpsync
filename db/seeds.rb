@@ -14,23 +14,23 @@ demo_trips = [
   [ "Hana", "Niseko United", -2, 7, "advanced", %w[English Japanese], %w[ride_buddy], %w[japanese driver], "line", "Powder's been great all week. Join me for first chair." ],
   [ "Lucas", "Whistler Blackcomb", -1, 4, "intermediate", %w[English French], %w[ride_buddy lodge_mate], %w[gear], "instagram", "Here till Sunday, happy to show people around Blackcomb." ],
   [ "Jun", "Hakuba Happo-one", -3, 8, "expert", %w[English Cantonese Japanese], %w[student], %w[instructor japanese], "whatsapp", "Teaching all week, a couple of lesson slots left." ],
-  [ "Aisha", "Revelstoke", 0, 5, "advanced", %w[English], %w[ride_buddy driver], [], "email", "Just arrived, looking for someone to ride the bowls with." ],
+  [ "Ashley", "Revelstoke", 0, 5, "advanced", %w[English], %w[ride_buddy driver], [], "email", "Just arrived, looking for someone to ride the bowls with." ],
   # Upcoming trips
-  [ "Wing", "Hakuba Happo-one", 30, 5, "intermediate", %w[English Cantonese], %w[driver lodge_mate], %w[japanese], "whatsapp", "First time in Hakuba, happy to split a lodge." ],
-  [ "Mika", "Hakuba Happo-one", 31, 4, "intermediate", %w[English Japanese], %w[lodge_mate ride_buddy], %w[driver idp], "line", "Renting a car from Nagano station." ],
+  [ "Nicky", "Hakuba Happo-one", 30, 5, "intermediate", %w[English Cantonese], %w[driver lodge_mate], %w[japanese], "whatsapp", "First time in Hakuba, happy to split a lodge." ],
+  [ "Miles", "Hakuba Happo-one", 31, 4, "intermediate", %w[English Japanese], %w[lodge_mate ride_buddy], %w[driver idp], "line", "Renting a car from Nagano station." ],
   [ "Jason", "Hakuba Goryu", 29, 6, "advanced", %w[English Mandarin], %w[ride_buddy], %w[gear], "wechat", "Have a spare 154 board if anyone needs one." ],
   [ "Ken", "Hakuba Happo-one", 28, 10, "expert", %w[English Japanese Cantonese], %w[student], %w[instructor japanese], "whatsapp", "CASI Level 2, private lessons for beginners and intermediates." ],
   [ "Priya", "Hakuba Goryu", 32, 3, "beginner", %w[English], %w[instructor gear], [], "instagram", "Never snowboarded. Looking for a patient coach." ],
-  [ "Hoi Yan", "Hakuba Happo-one", 33, 4, "beginner", %w[Cantonese English], %w[instructor ride_buddy], [], "whatsapp", "Want lessons in Cantonese if possible." ],
+  [ "Lily", "Hakuba Happo-one", 33, 4, "beginner", %w[Cantonese English], %w[instructor ride_buddy], [], "whatsapp", "Want lessons in Cantonese if possible." ],
   [ "Daniel", "Nozawa Onsen", 30, 5, "advanced", %w[English French], %w[driver lodge_mate], %w[gear], "email", "Coming from Tokyo, no licence for Japan." ],
-  [ "Sora", "Nozawa Onsen", 29, 7, "intermediate", %w[Japanese English], %w[lodge_mate], %w[driver idp japanese], "line", "Driving up from Tokyo, two seats free." ],
+  [ "Cindy", "Nozawa Onsen", 29, 7, "intermediate", %w[Japanese English], %w[lodge_mate], %w[driver idp japanese], "line", "Driving up from Tokyo, two seats free." ],
   [ "Chloe", "Niseko United", 45, 7, "advanced", %w[English Cantonese], %w[ride_buddy lodge_mate], %w[idp driver], "whatsapp", "Booked a 2-bed condo in Hirafu, one room free." ],
   [ "Marcus", "Niseko United", 46, 5, "advanced", %w[English], %w[lodge_mate ride_buddy driver], [], "instagram", "Backcountry curious, solo trip." ],
   [ "Yuki", "Rusutsu", 44, 4, "expert", %w[Japanese English Mandarin], %w[student], %w[instructor japanese], "line", "Freestyle and park coaching." ],
   [ "Leo", "Rusutsu", 45, 3, "intermediate", %w[Mandarin English], %w[instructor driver], %w[gear], "wechat", "Want to learn ground tricks." ],
   [ "Ada", "Kiroro", 50, 6, "intermediate", %w[English Korean], %w[ride_buddy japanese], %w[driver idp], "email", "Flying into Sapporo, renting a car." ],
   [ "Min-jun", "Kiroro", 51, 4, "advanced", %w[Korean English], %w[driver ride_buddy], [], "instagram", "Powder days only, happy to chip in for gas." ],
-  [ "Grace", "Furano", 52, 5, "beginner", %w[English Cantonese], %w[instructor lodge_mate], [], "whatsapp", "Family-friendly trip with my sister." ],
+  [ "Megan", "Furano", 52, 5, "beginner", %w[English Cantonese], %w[instructor lodge_mate], [], "whatsapp", "Family-friendly trip with my sister." ],
   [ "Tom", "Myoko Akakura", 60, 8, "advanced", %w[English], %w[japanese ride_buddy], %w[driver idp], "email", "Long trip, flexible dates." ],
   [ "Kana", "Myoko Akakura", 61, 4, "intermediate", %w[Japanese English], %w[ride_buddy driver], %w[japanese], "line", "Local, can show the good tree runs." ],
   [ "Ivan", "Naeba", 62, 3, "beginner", %w[English Mandarin], %w[instructor], [], "wechat", "Short weekend trip from Tokyo." ],
@@ -38,7 +38,7 @@ demo_trips = [
   [ "Ryan", "Whistler Blackcomb", 20, 4, "advanced", %w[English Cantonese], %w[ride_buddy lodge_mate], %w[driver], "whatsapp", "Driving up from Vancouver Friday morning." ],
   [ "Sophie", "Whistler Blackcomb", 21, 3, "intermediate", %w[English French], %w[driver lodge_mate], %w[gear], "instagram", "No car, can split gas and parking." ],
   [ "Arjun", "Whistler Blackcomb", 19, 6, "expert", %w[English], %w[student], %w[instructor driver], "email", "CASI Level 3, freeride and steeps." ],
-  [ "Mei", "Whistler Blackcomb", 22, 2, "beginner", %w[Mandarin English], %w[instructor ride_buddy], [], "wechat", "First season, want to learn carving." ],
+  [ "Nicole", "Whistler Blackcomb", 22, 2, "beginner", %w[Mandarin English], %w[instructor ride_buddy], [], "wechat", "First season, want to learn carving." ],
   [ "Noah", "Revelstoke", 35, 5, "expert", %w[English], %w[lodge_mate ride_buddy], %w[driver], "email", "Splitting an Airbnb, one spot left." ],
   [ "Fiona", "Revelstoke", 36, 4, "advanced", %w[English Cantonese], %w[driver ride_buddy], %w[gear], "whatsapp", "Flying into Kelowna." ],
   [ "Owen", "Sun Peaks", 40, 3, "intermediate", %w[English], %w[ride_buddy], [], "instagram", "Spring break trip, chill pace." ],
@@ -51,11 +51,11 @@ demo_trips = [
 # Photo for each sample rider, from app/assets/images/avatars. Riders not
 # listed get an initial avatar, the same as real riders.
 demo_avatars = {
-  "Hana" => "avatar-05.jpg", "Lucas" => "avatar-13.jpg", "Jun" => "avatar-17.jpg", "Aisha" => "avatar-03.jpg",
-  "Wing" => "avatar-02.jpg", "Mika" => "avatar-11.jpg", "Jason" => "avatar-14.jpg", "Priya" => "avatar-10.jpg",
-  "Hoi Yan" => "avatar-04.jpg", "Daniel" => "avatar-08.jpg", "Sora" => "avatar-06.jpg", "Chloe" => "avatar-12.jpg",
-  "Marcus" => "avatar-09.jpg", "Grace" => "avatar-07.jpg", "Ryan" => "avatar-15.jpg", "Sophie" => "avatar-16.jpg",
-  "Mei" => "avatar-18.jpg", "Noah" => "avatar-01.jpg"
+  "Hana" => "avatar-05.jpg", "Lucas" => "avatar-13.jpg", "Jun" => "avatar-17.jpg", "Ashley" => "avatar-03.jpg",
+  "Nicky" => "avatar-02.jpg", "Miles" => "avatar-11.jpg", "Jason" => "avatar-14.jpg", "Priya" => "avatar-10.jpg",
+  "Lily" => "avatar-04.jpg", "Daniel" => "avatar-08.jpg", "Cindy" => "avatar-06.jpg", "Chloe" => "avatar-12.jpg",
+  "Marcus" => "avatar-09.jpg", "Megan" => "avatar-07.jpg", "Ryan" => "avatar-15.jpg", "Sophie" => "avatar-16.jpg",
+  "Nicole" => "avatar-18.jpg", "Noah" => "avatar-01.jpg"
 }.freeze
 
 Trip.transaction do
