@@ -1,0 +1,111 @@
+<%= form_with model: trip, url: (trip.new_record? ? trips_path : manage_trip_path(trip.edit_token)), class: "space-y-6" do |f| %>
+  <% if trip.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+      <p class="font-medium">Fix these before posting:</p>
+      <ul class="mt-1 list-disc pl-5">
+        <% trip.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
+    <h2 class="font-semibold text-slate-900">Your trip</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <%= f.label :name, "First name or nickname", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.text_field :name, class: field_class, placeholder: "Wing", autocomplete: "given-name" %>
+      </div>
+      <div>
+        <%= f.label :resort, class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.select :resort, grouped_options_for_select(ResortCatalog::REGIONS, trip.resort), { include_blank: "Pick a resort" }, class: field_class %>
+      </div>
+      <div>
+        <%= f.label :starts_on, "First day", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.date_field :starts_on, class: field_class %>
+      </div>
+      <div>
+        <%= f.label :ends_on, "Last day", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.date_field :ends_on, class: field_class %>
+      </div>
+      <div>
+        <%= f.label :skill_level, "Riding level", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.select :skill_level, Trip::SKILL_LEVELS.map { |level| [ level.capitalize, level ] }, {}, class: field_class %>
+      </div>
+      <div>
+        <%= f.label :party_size, "People in your group", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.number_field :party_size, min: 1, max: 8, class: field_class %>
+      </div>
+    </div>
+
+    <fieldset>
+      <legend class="mb-2 text-sm text-slate-700">Languages you speak</legend>
+      <div class="flex flex-wrap gap-2">
+        <%= f.collection_check_boxes :languages, Trip::LANGUAGES, :itself, :itself do |b| %>
+          <label class="cursor-pointer">
+            <%= b.check_box(class: "peer sr-only") %>
+            <span class="inline-block rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-sky-300"><%= b.text %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="space-y-5 rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
+    <div>
+      <h2 class="font-semibold text-slate-900">Matching</h2>
+      <p class="text-sm text-slate-500">We match what you're looking for with what other riders can offer, and the other way round.</p>
+    </div>
+
+    <fieldset>
+      <legend class="mb-2 text-sm text-slate-700">Looking for</legend>
+      <div class="flex flex-wrap gap-2">
+        <%= f.collection_check_boxes :looking_for, TagCatalog::ALL, :key, :label do |b| %>
+          <label class="cursor-pointer" title="<%= b.object.hint %>">
+            <%= b.check_box(class: "peer sr-only") %>
+            <span class="inline-block rounded-full border border-sky-200 bg-white px-3 py-1.5 text-sm text-sky-800 peer-checked:border-sky-600 peer-checked:bg-sky-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-sky-300"><%= b.text %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-2 text-sm text-slate-700">Can offer <span class="text-slate-400">(optional)</span></legend>
+      <div class="flex flex-wrap gap-2">
+        <%= f.collection_check_boxes :offering, TagCatalog.complementary, :key, :label do |b| %>
+          <label class="cursor-pointer" title="<%= b.object.hint %>">
+            <%= b.check_box(class: "peer sr-only") %>
+            <span class="inline-block rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-sm text-emerald-800 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-emerald-300"><%= b.text %></span>
+          </label>
+        <% end %>
+      </div>
+      <p class="mt-2 text-xs text-slate-500">Lodge mate and Ride buddy are things you share, so pick them under "Looking for" only.</p>
+    </fieldset>
+  </section>
+
+  <section class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
+    <div>
+      <h2 class="font-semibold text-slate-900">Contact</h2>
+      <p class="text-sm text-slate-500">Only riders who have posted a trip can see this, never anonymous visitors.</p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+      <div>
+        <%= f.label :contact_method, "App", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.select :contact_method, Trip::CONTACT_METHODS.invert, {}, class: field_class %>
+      </div>
+      <div>
+        <%= f.label :contact_handle, "Handle or number", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.text_field :contact_handle, class: field_class, placeholder: "@wing.rides" %>
+      </div>
+    </div>
+    <div>
+      <%= f.label :note, "Anything else? (optional)", class: "mb-1 block text-sm text-slate-700" %>
+      <%= f.text_area :note, rows: 3, maxlength: 500, class: field_class, placeholder: "Arriving by bus from Tokyo, happy to split a cabin." %>
+    </div>
+  </section>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit trip.new_record? ? "Post trip and see matches" : "Save changes",
+                 class: "cursor-pointer rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" %>
+    <%= link_to "Cancel", (trip.new_record? ? root_path : trip_path(trip)), class: "text-sm text-slate-600 hover:underline" %>
+  </div>
+<% end %>

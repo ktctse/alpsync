@@ -1,0 +1,43 @@
+# Local development: Rails and Postgres in containers, so nothing needs
+# installing on the Mac itself. Start with `docker compose up`, then open
+# http://localhost:3100. Run one-off commands with `docker compose run --rm web bin/rails ...`.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: alpsync
+      POSTGRES_PASSWORD: alpsync
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    image: ruby:3.4
+    working_dir: /app
+    # Runs the Tailwind watcher and the Rails server side by side (what bin/dev
+    # does, without needing the foreman gem inside the container).
+    command: bash -c "rm -f tmp/pids/server.pid && (bin/rails 'tailwindcss:watch[always]' &) && bin/rails server -b 0.0.0.0"
+    environment:
+      BUNDLE_PATH: /bundle
+      BINDING: 0.0.0.0
+      PGHOST: db
+      PGUSER: alpsync
+      PGPASSWORD: alpsync
+    volumes:
+      - .:/app
+      - bundle:/bundle
+      - gems:/usr/local/bundle
+    # Host port 3100, since 3000 is often taken by other local tools.
+    # Bound to 127.0.0.1 so the dev server isn't reachable from the network.
+    ports:
+      - "127.0.0.1:3100:3000"
+    depends_on:
+      - db
+    tty: true
+
+volumes:
+  pgdata:
+    name: alpsync_pgdata
+  bundle:
+    name: alpsync_bundle
+  gems:
+    name: alpsync_gems

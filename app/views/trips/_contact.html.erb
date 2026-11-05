@@ -1,0 +1,10 @@
+<div class="mt-auto border-t border-slate-100 pt-3 text-sm">
+  <% if can_see_contact?(trip) %>
+    <span class="text-slate-500"><%= trip.contact_label %>:</span>
+    <span class="font-medium text-slate-800"><%= trip.contact_handle %></span>
+  <% else %>
+    <span class="text-slate-500">
+      Contact details unlock once you <%= link_to "post your trip", new_trip_path(resort: trip.resort), class: "font-medium text-sky-700 underline" %>.
+    </span>
+  <% end %>
+</div>

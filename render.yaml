@@ -1,0 +1,27 @@
+# Render Blueprint: creates the web service and its Postgres database together.
+# In Render, choose New > Blueprint and pick this repository.
+databases:
+  - name: alpsync-db
+    plan: free
+    databaseName: alpsync
+    user: alpsync
+
+services:
+  - type: web
+    name: alpsync
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: alpsync-db
+          property: connectionString
+      # Rails signs cookies with this. Render generates a random value, so no
+      # secret ever needs copying by hand or committing to the repo.
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      # Thruster (the Dockerfile's front proxy) listens here; Render routes
+      # public traffic to port 10000 by default.
+      - key: HTTP_PORT
+        value: 10000

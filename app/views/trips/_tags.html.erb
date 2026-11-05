@@ -1,0 +1,8 @@
+<div>
+  <p class="mb-1 text-[11px] font-medium tracking-wide text-slate-500 uppercase"><%= label %></p>
+  <div class="flex flex-wrap gap-1.5">
+    <% keys.each do |key| %>
+      <span class="<%= tag_chip_class(key, tone) %>"><%= TagCatalog.label(key) %></span>
+    <% end %>
+  </div>
+</div>
