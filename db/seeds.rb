@@ -11,10 +11,10 @@ today = Date.current
 # name, resort, starts in (days), length (days), level, languages, looking for, can offer, contact, note
 demo_trips = [
   # On the mountain now: these start in the past and renew to the same offsets.
-  [ "Hana", "Niseko United", -2, 7, "advanced", %w[English Japanese], %w[ride_buddy], %w[japanese driver], "line", "Powder's been great all week. Join me for first chair." ],
+  [ "Ryan", "Niseko United", -2, 7, "advanced", %w[English Japanese], %w[ride_buddy], %w[japanese driver], "line", "Powder's been great all week. Join me for first chair." ],
   [ "Lucas", "Whistler Blackcomb", -1, 4, "intermediate", %w[English French], %w[ride_buddy lodge_mate], %w[gear], "instagram", "Here till Sunday, happy to show people around Blackcomb." ],
   [ "Jun", "Hakuba Happo-one", -3, 8, "expert", %w[English Cantonese Japanese], %w[student], %w[instructor japanese], "whatsapp", "Teaching all week, a couple of lesson slots left." ],
-  [ "Ashley", "Revelstoke", 0, 5, "advanced", %w[English], %w[ride_buddy driver], [], "email", "Just arrived, looking for someone to ride the bowls with." ],
+  [ "Toby", "Revelstoke", 0, 5, "advanced", %w[English], %w[ride_buddy driver], [], "email", "Just arrived, looking for someone to ride the bowls with." ],
   # Upcoming trips
   [ "Nicky", "Hakuba Happo-one", 30, 5, "intermediate", %w[English Cantonese], %w[driver lodge_mate], %w[japanese], "whatsapp", "First time in Hakuba, happy to split a lodge." ],
   [ "Miles", "Hakuba Happo-one", 31, 4, "intermediate", %w[English Japanese], %w[lodge_mate ride_buddy], %w[driver idp], "line", "Renting a car from Nagano station." ],
@@ -35,7 +35,7 @@ demo_trips = [
   [ "Kana", "Myoko Akakura", 61, 4, "intermediate", %w[Japanese English], %w[ride_buddy driver], %w[japanese], "line", "Local, can show the good tree runs." ],
   [ "Ivan", "Naeba", 62, 3, "beginner", %w[English Mandarin], %w[instructor], [], "wechat", "Short weekend trip from Tokyo." ],
   [ "Elena", "Gala Yuzawa", 63, 2, "intermediate", %w[English French], %w[ride_buddy gear], [], "instagram", "Day trip by shinkansen, need rental advice." ],
-  [ "Ryan", "Whistler Blackcomb", 20, 4, "advanced", %w[English Cantonese], %w[ride_buddy lodge_mate], %w[driver], "whatsapp", "Driving up from Vancouver Friday morning." ],
+  [ "Hana", "Whistler Blackcomb", 20, 4, "advanced", %w[English Cantonese], %w[ride_buddy lodge_mate], %w[driver], "whatsapp", "Driving up from Vancouver Friday morning." ],
   [ "Sophie", "Whistler Blackcomb", 21, 3, "intermediate", %w[English French], %w[driver lodge_mate], %w[gear], "instagram", "No car, can split gas and parking." ],
   [ "Arjun", "Whistler Blackcomb", 19, 6, "expert", %w[English], %w[student], %w[instructor driver], "email", "CASI Level 3, freeride and steeps." ],
   [ "Nicole", "Whistler Blackcomb", 22, 2, "beginner", %w[Mandarin English], %w[instructor ride_buddy], [], "wechat", "First season, want to learn carving." ],
@@ -51,10 +51,10 @@ demo_trips = [
 # Photo for each sample rider, from app/assets/images/avatars. Riders not
 # listed get an initial avatar, the same as real riders.
 demo_avatars = {
-  "Hana" => "avatar-05.jpg", "Lucas" => "avatar-13.jpg", "Jun" => "avatar-17.jpg", "Ashley" => "avatar-03.jpg",
+  "Ryan" => "avatar-05.jpg", "Lucas" => "avatar-13.jpg", "Jun" => "avatar-17.jpg", "Toby" => "avatar-03.jpg",
   "Nicky" => "avatar-02.jpg", "Miles" => "avatar-11.jpg", "Jason" => "avatar-14.jpg", "Priya" => "avatar-10.jpg",
   "Lily" => "avatar-04.jpg", "Daniel" => "avatar-08.jpg", "Cindy" => "avatar-06.jpg", "Chloe" => "avatar-12.jpg",
-  "Marcus" => "avatar-09.jpg", "Megan" => "avatar-07.jpg", "Ryan" => "avatar-15.jpg", "Sophie" => "avatar-16.jpg",
+  "Marcus" => "avatar-09.jpg", "Megan" => "avatar-07.jpg", "Hana" => "avatar-15.jpg", "Sophie" => "avatar-16.jpg",
   "Nicole" => "avatar-18.jpg", "Noah" => "avatar-01.jpg"
 }.freeze
 
@@ -67,7 +67,9 @@ Trip.transaction do
       resort:, skill_level: level, languages:, looking_for:, offering:, contact_method:, note:,
       party_size: 1, contact_handle: "demo-only (#{name.parameterize})", avatar: demo_avatars[name]
     )
-    if trip.new_record? || trip.ends_on < today
+    # Fresh dates for new or ended trips, and for a sample whose resort changed
+    # (e.g. two names swapped), so its dates match its new place in the list.
+    if trip.new_record? || trip.ends_on < today || trip.resort_changed?
       trip.starts_on = today + starts_in
       trip.ends_on = today + starts_in + length - 1
     end

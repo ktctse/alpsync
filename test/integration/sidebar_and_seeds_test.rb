@@ -37,7 +37,7 @@ class SidebarAndSeedsTest < ActionDispatch::IntegrationTest
     travel_to 120.days.from_now do
       seed
       assert_equal count, Trip.demo.upcoming.count
-      assert Trip.demo.find_by(name: "Hana").starts_on <= Date.current
+      assert Trip.demo.find_by(name: "Ryan").starts_on <= Date.current
     end
     assert_equal "Real rider", real.reload.name
   end
