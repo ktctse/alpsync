@@ -4,6 +4,11 @@ module ApplicationHelper
 
   def field_class = FIELD_CLASS
 
+  SHORT_REGIONS = { "British Columbia" => "BC", "Alberta" => "AB" }.freeze
+
+  # "BC" rather than "British Columbia", so resort lines fit on a card.
+  def short_region(region) = SHORT_REGIONS.fetch(region, region)
+
   # "Jan 10–14", or "Jan 30–Feb 3" when the trip crosses a month.
   def trip_dates(trip)
     starts, ends = trip.starts_on, trip.ends_on
