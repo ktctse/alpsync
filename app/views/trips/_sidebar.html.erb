@@ -1,11 +1,12 @@
-<aside class="space-y-6">
-  <section>
+<%# lg:pt-8 matches the feed's count line, so these cards line up with the first trip cards %>
+<aside class="space-y-4 lg:pt-8">
+  <section class="rounded-xl border border-slate-200 bg-white p-4">
     <h2 class="text-sm font-semibold text-slate-900">On the mountain now</h2>
     <% if on_the_mountain.any? %>
       <ul class="mt-2 space-y-1">
         <% on_the_mountain.each do |trip| %>
           <li>
-            <%= link_to trip_path(trip), class: "-mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-white" do %>
+            <%= link_to trip_path(trip), class: "-mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-slate-50" do %>
               <%= avatar_tag(trip) %>
               <span class="min-w-0 text-sm">
                 <span class="font-medium text-slate-900"><%= trip.name %></span>
@@ -22,12 +23,12 @@
     <% end %>
   </section>
 
-  <section>
+  <section class="rounded-xl border border-slate-200 bg-white p-4">
     <h2 class="text-sm font-semibold text-slate-900">Just posted</h2>
     <ul class="mt-2 space-y-1">
       <% just_posted.each do |trip| %>
         <li>
-          <%= link_to trip_path(trip), class: "-mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-white" do %>
+          <%= link_to trip_path(trip), class: "-mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-slate-50" do %>
             <%= avatar_tag(trip) %>
             <span class="min-w-0 text-sm">
               <span class="font-medium text-slate-900"><%= trip.name %></span>
