@@ -1,15 +1,21 @@
-# Fictional demo trips. Names and contact handles are made up; nothing here is a
-# real person. Dates are relative to the day they're created.
+# Fictional demo trips. Names, trips and contact handles are made up. Some show
+# photos of the developer's friends, used with their permission; the names
+# beside them are not theirs.
 #
 # This runs on every boot in production (see bin/docker-entrypoint), so it must
-# be safe to repeat: it only replaces the demo trips once most of them have
-# ended, and never touches trips that real riders posted.
-MIN_UPCOMING_DEMO_TRIPS = 20
-
+# be safe to repeat. Each sample trip is created once and renewed with fresh
+# dates after it ends, so the demo never goes stale. Trips posted by real
+# riders are never touched.
 today = Date.current
 
 # name, resort, starts in (days), length (days), level, languages, looking for, can offer, contact, note
-DEMO_TRIPS = [
+demo_trips = [
+  # On the mountain now: these start in the past and renew to the same offsets.
+  [ "Hana", "Niseko United", -2, 7, "advanced", %w[English Japanese], %w[ride_buddy], %w[japanese driver], "line", "Powder's been great all week. Join me for first chair." ],
+  [ "Lucas", "Whistler Blackcomb", -1, 4, "intermediate", %w[English French], %w[ride_buddy lodge_mate], %w[gear], "instagram", "Here till Sunday, happy to show people around Blackcomb." ],
+  [ "Jun", "Hakuba Happo-one", -3, 8, "expert", %w[English Cantonese Japanese], %w[student], %w[instructor japanese], "whatsapp", "Teaching all week, a couple of lesson slots left." ],
+  [ "Aisha", "Revelstoke", 0, 5, "advanced", %w[English], %w[ride_buddy driver], [], "email", "Just arrived, looking for someone to ride the bowls with." ],
+  # Upcoming trips
   [ "Wing", "Hakuba Happo-one", 30, 5, "intermediate", %w[English Cantonese], %w[driver lodge_mate], %w[japanese], "whatsapp", "First time in Hakuba, happy to split a lodge." ],
   [ "Mika", "Hakuba Happo-one", 31, 4, "intermediate", %w[English Japanese], %w[lodge_mate ride_buddy], %w[driver idp], "line", "Renting a car from Nagano station." ],
   [ "Jason", "Hakuba Goryu", 29, 6, "advanced", %w[English Mandarin], %w[ride_buddy], %w[gear], "wechat", "Have a spare 154 board if anyone needs one." ],
@@ -42,21 +48,31 @@ DEMO_TRIPS = [
   [ "Ben", "Lake Louise", 55, 5, "expert", %w[English], %w[student], %w[instructor driver gear], "email", "Can lend boots and goggles to students." ]
 ].freeze
 
-if Trip.demo.upcoming.count >= MIN_UPCOMING_DEMO_TRIPS
-  puts "Demo trips are still fresh, nothing to seed"
-else
-  Trip.transaction do
-    Trip.demo.delete_all
-    DEMO_TRIPS.each do |name, resort, starts_in, length, level, languages, looking_for, offering, contact_method, note|
-      Trip.create!(
-        name:, resort:, skill_level: level, languages:, looking_for:, offering:, contact_method:, note:,
-        starts_on: today + starts_in,
-        ends_on: today + starts_in + length - 1,
-        party_size: 1,
-        contact_handle: "demo-only (#{name.parameterize})",
-        demo: true
-      )
+# Photo for each sample rider, from app/assets/images/avatars. Riders not
+# listed get an initial avatar, the same as real riders.
+demo_avatars = {
+  "Hana" => "avatar-05.jpg", "Lucas" => "avatar-13.jpg", "Jun" => "avatar-17.jpg", "Aisha" => "avatar-03.jpg",
+  "Wing" => "avatar-02.jpg", "Mika" => "avatar-11.jpg", "Jason" => "avatar-14.jpg", "Priya" => "avatar-10.jpg",
+  "Hoi Yan" => "avatar-04.jpg", "Daniel" => "avatar-08.jpg", "Sora" => "avatar-06.jpg", "Chloe" => "avatar-12.jpg",
+  "Marcus" => "avatar-09.jpg", "Grace" => "avatar-07.jpg", "Ryan" => "avatar-15.jpg", "Sophie" => "avatar-16.jpg",
+  "Mei" => "avatar-18.jpg", "Noah" => "avatar-01.jpg"
+}.freeze
+
+Trip.transaction do
+  Trip.demo.where.not(name: demo_trips.map(&:first)).delete_all
+
+  demo_trips.each do |name, resort, starts_in, length, level, languages, looking_for, offering, contact_method, note|
+    trip = Trip.demo.find_or_initialize_by(name:)
+    trip.assign_attributes(
+      resort:, skill_level: level, languages:, looking_for:, offering:, contact_method:, note:,
+      party_size: 1, contact_handle: "demo-only (#{name.parameterize})", avatar: demo_avatars[name]
+    )
+    if trip.new_record? || trip.ends_on < today
+      trip.starts_on = today + starts_in
+      trip.ends_on = today + starts_in + length - 1
     end
+    trip.save! if trip.changed?
   end
-  puts "Seeded #{Trip.demo.count} demo trips"
 end
+
+puts "#{Trip.demo.count} sample trips ready"

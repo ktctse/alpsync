@@ -4,6 +4,8 @@ class TripsController < ApplicationController
   def index
     @filters = params.permit(:region, :language, :tag, :on)
     @trips = filtered_trips
+    @on_the_mountain = Trip.upcoming.where(starts_on: ..Date.current).order(:ends_on).limit(5)
+    @just_posted = Trip.upcoming.newest_first.limit(5)
   end
 
   def show

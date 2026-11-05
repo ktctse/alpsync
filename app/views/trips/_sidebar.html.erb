@@ -1,0 +1,43 @@
+<aside class="space-y-6">
+  <section>
+    <h2 class="text-sm font-semibold text-slate-900">On the mountain now</h2>
+    <% if on_the_mountain.any? %>
+      <ul class="mt-2 space-y-1">
+        <% on_the_mountain.each do |trip| %>
+          <li>
+            <%= link_to trip_path(trip), class: "-mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-white" do %>
+              <%= avatar_tag(trip) %>
+              <span class="min-w-0 text-sm">
+                <span class="font-medium text-slate-900"><%= trip.name %></span>
+                <% if trip.demo? %><span class="text-[11px] text-slate-400">Sample</span><% end %>
+                <span class="block truncate text-slate-500"><%= trip.resort %></span>
+                <span class="block text-xs text-slate-400">until <%= trip.ends_on.strftime("%b %-d") %></span>
+              </span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-2 text-sm text-slate-500">Nobody's out right now.</p>
+    <% end %>
+  </section>
+
+  <section>
+    <h2 class="text-sm font-semibold text-slate-900">Just posted</h2>
+    <ul class="mt-2 space-y-1">
+      <% just_posted.each do |trip| %>
+        <li>
+          <%= link_to trip_path(trip), class: "-mx-2 flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-white" do %>
+            <%= avatar_tag(trip) %>
+            <span class="min-w-0 text-sm">
+              <span class="font-medium text-slate-900"><%= trip.name %></span>
+              <% if trip.demo? %><span class="text-[11px] text-slate-400">Sample</span><% end %>
+              <span class="block truncate text-slate-500"><%= trip.resort %></span>
+              <span class="block text-xs text-slate-400"><%= time_ago_in_words(trip.created_at) %> ago</span>
+            </span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+</aside>

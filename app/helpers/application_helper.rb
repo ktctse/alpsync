@@ -13,6 +13,23 @@ module ApplicationHelper
     "#{starts.strftime('%b %-d')}–#{finish}"
   end
 
+  AVATAR_COLORS = [
+    "bg-sky-100 text-sky-800", "bg-emerald-100 text-emerald-800", "bg-violet-100 text-violet-800",
+    "bg-amber-100 text-amber-800", "bg-rose-100 text-rose-800", "bg-teal-100 text-teal-800"
+  ].freeze
+
+  # The rider's photo if they have one, otherwise their initial on a colour
+  # picked from their name, so the same rider always gets the same colour.
+  def avatar_tag(trip, size: "h-9 w-9")
+    if trip.avatar.present?
+      image_tag "avatars/#{trip.avatar}", alt: "", class: "#{size} shrink-0 rounded-full object-cover"
+    else
+      color = AVATAR_COLORS[trip.name.sum % AVATAR_COLORS.size]
+      tag.span trip.name.first.upcase, "aria-hidden": true,
+               class: "#{size} #{color} inline-flex shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+    end
+  end
+
   # Needs are sky, offers are emerald, shared plans are violet.
   def tag_chip_class(key, tone)
     colors =

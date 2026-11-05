@@ -62,8 +62,8 @@ class TripFlowTest < ActionDispatch::IntegrationTest
     )
 
     get trips_path, params: { region: "Hokkaido", tag: "driver" }
-    assert_select "article", 1
-    assert_match "Ada", response.body
-    assert_no_match "Mika", response.body
+    assert_select "turbo-frame#trips article", 1
+    assert_select "turbo-frame#trips", text: /Ada/
+    assert_select "turbo-frame#trips", text: /Mika/, count: 0
   end
 end

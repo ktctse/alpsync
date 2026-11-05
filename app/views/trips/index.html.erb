@@ -8,6 +8,8 @@
   </p>
 </section>
 
+<div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem]">
+<div>
 <%= form_with url: trips_path, method: :get, class: "mb-6 grid grid-cols-2 gap-2 sm:grid-cols-5",
               data: { turbo_frame: "trips", turbo_action: "advance" } do |f| %>
   <%= f.select :region, ResortCatalog.regions, { include_blank: "Any region", selected: @filters[:region] }, class: field_class, "aria-label": "Region" %>
@@ -20,7 +22,7 @@
 <%= turbo_frame_tag "trips", target: "_top" do %>
   <% if @trips.any? %>
     <p class="mb-3 text-sm text-slate-500"><%= pluralize(@trips.size, "upcoming trip") %></p>
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-2">
       <%= render partial: "trip", collection: @trips %>
     </div>
   <% else %>
@@ -30,3 +32,7 @@
     </div>
   <% end %>
 <% end %>
+</div>
+
+<%= render "sidebar", on_the_mountain: @on_the_mountain, just_posted: @just_posted %>
+</div>
