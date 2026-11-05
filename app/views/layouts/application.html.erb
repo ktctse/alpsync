@@ -14,9 +14,10 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <%# Served from the asset pipeline so the URL changes whenever the logo does %>
+    <link rel="icon" href="<%= asset_path("logo.png") %>" type="image/png">
+    <link rel="icon" href="<%= asset_path("logo.svg") %>" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="<%= asset_path("logo.png") %>">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -27,7 +28,7 @@
     <header class="border-b border-slate-200 bg-white">
       <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <%= link_to root_path, class: "flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900" do %>
-          <%= image_tag "/icon.svg", alt: "", class: "h-6 w-6" %>
+          <%= image_tag "logo.svg", alt: "", class: "h-6 w-6" %>
           <span>alp<span class="text-sky-600">sync</span></span>
         <% end %>
         <nav class="flex items-center gap-2 text-sm">
