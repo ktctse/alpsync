@@ -26,7 +26,10 @@
   <body class="min-h-full bg-slate-50 text-slate-800 antialiased">
     <header class="border-b border-slate-200 bg-white">
       <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <%= link_to root_path, class: "text-lg font-semibold tracking-tight text-slate-900" do %>alp<span class="text-sky-600">sync</span><% end %>
+        <%= link_to root_path, class: "flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900" do %>
+          <%= image_tag "/icon.svg", alt: "", class: "h-6 w-6" %>
+          <span>alp<span class="text-sky-600">sync</span></span>
+        <% end %>
         <nav class="flex items-center gap-2 text-sm">
           <% if my_trip %>
             <%= link_to "Your matches", trip_path(my_trip), class: "rounded-lg px-3 py-1.5 text-slate-700 hover:bg-slate-100" %>
