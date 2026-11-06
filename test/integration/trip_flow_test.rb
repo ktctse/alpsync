@@ -42,6 +42,30 @@ class TripFlowTest < ActionDispatch::IntegrationTest
     assert_not Trip.exists?(@mika.id)
   end
 
+  test "the feed shows ten trips per page with page numbers that keep the filters" do
+    11.times do |i|
+      Trip.create!(
+        name: "Rider #{i}", resort: "Kiroro", starts_on: Date.current + 40 + i, ends_on: Date.current + 42 + i,
+        skill_level: "intermediate", languages: %w[English], looking_for: %w[ride_buddy],
+        contact_method: "email", contact_handle: "rider#{i}@example.com"
+      )
+    end
+
+    get trips_path, params: { region: "Hokkaido" }
+    assert_select "turbo-frame#trips article", 10
+    assert_select "turbo-frame#trips", text: /11 upcoming trips · page 1 of 2/
+    assert_select "nav[aria-label='Trip pages'] a", 2
+    assert_select "nav a[aria-current=page]", "1"
+    assert_select "nav a[href=?]", trips_path(region: "Hokkaido", page: 2)
+
+    get trips_path, params: { region: "Hokkaido", page: 2 }
+    assert_select "turbo-frame#trips article", 1
+    assert_select "nav a[aria-current=page]", "2"
+
+    get trips_path, params: { region: "Hokkaido", page: 99 }
+    assert_select "nav a[aria-current=page]", "2"
+  end
+
   test "the banner slides through three photos" do
     get root_path
     assert_select "[data-controller=slideshow] [data-slideshow-target=track] img", 3

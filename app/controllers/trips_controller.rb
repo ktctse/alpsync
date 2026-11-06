@@ -1,9 +1,15 @@
 class TripsController < ApplicationController
+  TRIPS_PER_PAGE = 10
+
   before_action :set_trip_by_token, only: %i[edit update destroy]
 
   def index
     @filters = params.permit(:region, :language, :tag, :on)
-    @trips = filtered_trips
+    trips = filtered_trips
+    @total = trips.count
+    @pages = [ (@total / TRIPS_PER_PAGE.to_f).ceil, 1 ].max
+    @page = params[:page].to_i.clamp(1, @pages)
+    @trips = trips.offset((@page - 1) * TRIPS_PER_PAGE).limit(TRIPS_PER_PAGE)
     @on_the_mountain = Trip.upcoming.where(starts_on: ..Date.current).order(:ends_on).limit(5)
     @just_posted = Trip.upcoming.newest_first.limit(5)
   end

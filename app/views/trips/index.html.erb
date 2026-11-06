@@ -46,14 +46,29 @@
 <% end %>
 
 <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_16rem]">
-  <%= turbo_frame_tag "trips", target: "_top" do %>
+  <%# autoscroll brings the top of the feed into view after paging or filtering %>
+  <%= turbo_frame_tag "trips", target: "_top", autoscroll: true, data: { autoscroll_block: "start" } do %>
     <%# The count line is always shown (even "0 upcoming trips") so the sidebar,
         offset by the same height, lines up with the first row of cards. %>
-    <p class="mb-3 h-5 text-sm text-slate-500"><%= pluralize(@trips.size, "upcoming trip") %></p>
+    <p class="mb-3 h-5 text-sm text-slate-500">
+      <%= pluralize(@total, "upcoming trip") %><% if @pages > 1 %> · page <%= @page %> of <%= @pages %><% end %>
+    </p>
     <% if @trips.any? %>
       <div class="grid gap-4 sm:grid-cols-2">
         <%= render partial: "trip", collection: @trips %>
       </div>
+
+      <% if @pages > 1 %>
+        <%# Page numbers load inside the feed and keep the current filters %>
+        <nav class="mt-6 flex flex-wrap justify-center gap-1" aria-label="Trip pages">
+          <% 1.upto(@pages) do |number| %>
+            <%= link_to number, trips_path(@filters.to_h.merge(page: number)),
+                        data: { turbo_frame: "trips", turbo_action: "advance" },
+                        aria: { current: ("page" if number == @page), label: "Page #{number}" },
+                        class: "min-w-9 rounded-md px-2.5 py-1.5 text-center text-sm text-slate-600 tabular-nums hover:bg-white aria-[current=page]:bg-slate-900 aria-[current=page]:text-white" %>
+          <% end %>
+        </nav>
+      <% end %>
     <% else %>
       <div class="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-600">
         No trips match those filters yet.
