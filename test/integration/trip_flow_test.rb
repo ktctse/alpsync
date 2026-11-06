@@ -75,6 +75,7 @@ class TripFlowTest < ActionDispatch::IntegrationTest
     get root_path
     assert_select "[data-controller=everest] canvas[role=img][aria-label]"
     assert_select "[data-controller=everest]", text: /Everest, 8,849 m/
+    assert_select "[data-controller=everest] a[href='https://raideresearch.com']", "Raide Research"
   end
 
   test "an unknown private link is not found" do

@@ -6,6 +6,8 @@ import { Controller } from "@hotwired/stimulus"
 // looking down on the South Col route. Left alone, it drifts around by itself.
 // It only animates while on screen, and holds still for people who prefer reduced
 // motion (it still follows the pointer, since that motion is theirs).
+//
+// Inspired by the animated logo on Raide Research's website (raideresearch.com).
 
 const POINTS = 240 // per shape; index POINTS / 2 is always the summit
 const BACKGROUND = "#05070b"
