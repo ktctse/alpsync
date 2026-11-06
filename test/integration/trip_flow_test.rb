@@ -42,6 +42,13 @@ class TripFlowTest < ActionDispatch::IntegrationTest
     assert_not Trip.exists?(@mika.id)
   end
 
+  test "the banner has a photo and a numbered button for each slide" do
+    get root_path
+    assert_select "[data-controller=slideshow] [data-slideshow-target=track] img", 3
+    assert_select "[data-slideshow-target=button]", 3
+    assert_select "[data-slideshow-target=caption]", "Jade Dragon Snow Mountain, Yunnan"
+  end
+
   test "an unknown private link is not found" do
     get manage_trip_path("not-a-real-token")
     assert_response :not_found
