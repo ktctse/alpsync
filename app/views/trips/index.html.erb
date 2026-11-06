@@ -5,10 +5,11 @@
       few seconds (slideshow_controller.js), with a film-grain overlay. Tall, with
       the text anchored to the bottom so the peaks rise above the headline; a
       bottom gradient keeps the text readable. %>
+  <%# Jade Dragon Snow Mountain (Yunnan), Shiga Kogen (Nagano), Western Sichuan %>
   <% slides = [
-       { image: "banner-jade-dragon.jpg", caption: "Jade Dragon Snow Mountain, Yunnan", position: "object-[50%_25%]" },
-       { image: "banner-shiga-kogen.jpg", caption: "Shiga Kogen, Nagano", position: "object-[50%_40%]" },
-       { image: "banner-western-sichuan.jpg", caption: "Western Sichuan", position: "object-[50%_30%]" }
+       { image: "banner-jade-dragon.jpg", position: "object-[50%_25%]" },
+       { image: "banner-shiga-kogen.jpg", position: "object-[50%_40%]" },
+       { image: "banner-western-sichuan.jpg", position: "object-[50%_30%]" }
      ] %>
   <section class="relative isolate flex min-h-[32rem] flex-col justify-end overflow-hidden bg-slate-800 sm:min-h-[38rem]"
            data-controller="slideshow"
@@ -40,18 +41,6 @@
         <%= f.date_field :on, value: @filters[:on], class: field_class, "aria-label": "On the mountain on" %>
         <%= f.submit "Filter", name: nil, class: "col-span-2 cursor-pointer rounded-lg bg-sky-600 px-3 py-2 text-sm font-medium text-white hover:bg-sky-700 sm:col-span-1" %>
       <% end %>
-
-      <div class="mt-6 flex items-center justify-between gap-4">
-        <div class="flex gap-1" role="group" aria-label="Banner photos">
-          <% slides.each_with_index do |slide, i| %>
-            <button type="button" data-slideshow-target="button" data-action="slideshow#select"
-                    data-index="<%= i %>" data-caption="<%= slide[:caption] %>"
-                    aria-label="Show photo <%= i + 1 %>: <%= slide[:caption] %>"
-                    class="cursor-pointer rounded-sm px-1.5 py-0.5 text-[11px] text-slate-300/80 tabular-nums hover:text-white aria-[current=true]:text-white aria-[current=true]:ring-1 aria-[current=true]:ring-white/70"><%= i + 1 %></button>
-          <% end %>
-        </div>
-        <p class="truncate text-right text-[11px] tracking-[0.2em] text-slate-300/80 uppercase" data-slideshow-target="caption" aria-live="polite"><%= slides.first[:caption] %></p>
-      </div>
     </div>
   </section>
 <% end %>
