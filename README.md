@@ -4,7 +4,7 @@
 
 Find your people for the mountain. Riders post a ski or snowboard trip (resort, dates, languages,
 riding level) with two sets of tags: what they're **looking for** and what they **can offer**.
-Alpsync matches them with riders on the same dates who fit, whether that's a driver, a lodge mate
+Alpsync matches them with riders on the same dates who fit, whether that's a driver, a lodge mate,
 or a coach, and says why each match was made.
 
 Built with Rails 8.1, Hotwire, Tailwind CSS and Postgres.
