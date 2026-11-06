@@ -75,9 +75,15 @@
             aria-label="Animated line drawing of Mount Everest around the Alpsync logo, changing as it circles the mountain and tilts to show the South Col route from above"></canvas>
     <div class="pointer-events-none absolute inset-0 opacity-25 mix-blend-overlay"
          style="background-image: url(<%= asset_path("grain.svg") %>)"></div>
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 mx-auto max-w-5xl px-4 pb-8 font-mono text-[11px] leading-relaxed text-slate-300 sm:text-xs">
-      <p>Everest, 8,849 m<br>27°59′17″N 86°55′31″E</p>
-      <p class="mt-2 text-slate-500"><span data-everest-target="view">Seen from the south</span>. Move across to circle the mountain, down to trace the route.</p>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 mx-auto max-w-5xl px-4 pb-8 font-mono text-[11px] leading-relaxed text-slate-300 sm:text-xs" data-everest-target="caption">
+      <p class="max-w-md">
+        <span class="underline underline-offset-4">Alp</span> for the mountain,
+        <span class="underline underline-offset-4">sync</span> for being there at the same time as the right people.
+        Almost every Everest summit is a team effort: a rope partner, a guide who knows the route, someone to share
+        the tent with. Alpsync helps you find yours, on any mountain.
+      </p>
+      <p class="mt-4 text-slate-400">Everest, 8,849 m · 27°59′17″N 86°55′31″E</p>
+      <p class="mt-1 text-slate-500"><span data-everest-target="view">Seen from the south</span>. Move across to circle the mountain, down to trace the South Col route.</p>
     </div>
   </section>
 <% end %>

@@ -52,7 +52,7 @@ const ROUTE = {
 }
 
 export default class extends Controller {
-  static targets = ["canvas", "view"]
+  static targets = ["canvas", "view", "caption"]
 
   connect() {
     this.pen = this.canvasTarget.getContext("2d")
@@ -118,6 +118,7 @@ export default class extends Controller {
     this.canvasTarget.height = Math.round(height * ratio)
     this.pen.setTransform(ratio, 0, 0, ratio, 0, 0)
     this.size = { width, height }
+    this.reserved = this.hasCaptionTarget ? this.captionTarget.offsetHeight + 16 : 0
     this.draw()
   }
 
@@ -141,10 +142,12 @@ export default class extends Controller {
     ctx.fillStyle = BACKGROUND
     ctx.fillRect(0, 0, width, height)
 
-    // Where the mountain sits: summit near the upper middle, base towards the bottom.
-    const tall = Math.min(height * 0.6, width * 0.75)
+    // Fit the mountain into the space above the text block, with a little more
+    // room above the summit than below the base.
+    const room = height - this.reserved
+    const tall = Math.min(room * 0.72, width * 0.75)
     const half = Math.min(width * 0.42, tall * 1.25)
-    const baseY = height * 0.5 + tall * 0.42
+    const baseY = (room - tall) * 0.6 + tall
     const centerX = width / 2
 
     const shape = this.currentShape()
