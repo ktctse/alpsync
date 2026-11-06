@@ -3,7 +3,7 @@ require "test_helper"
 class SidebarAndSeedsTest < ActionDispatch::IntegrationTest
   def seed = capture_io { load Rails.root.join("db/seeds.rb") }
 
-  test "the sidebar lists riders on the mountain now and the newest posts" do
+  test "the sidebar lists riders on the slopes now and the newest posts" do
     Trip.create!(
       name: "Hana", resort: "Niseko United", starts_on: Date.current - 1, ends_on: Date.current + 3,
       skill_level: "advanced", languages: %w[English], looking_for: %w[ride_buddy],
@@ -16,7 +16,7 @@ class SidebarAndSeedsTest < ActionDispatch::IntegrationTest
     )
 
     get root_path
-    assert_select "aside section:first-child", text: /On the mountain now.*Hana/m
+    assert_select "aside section:first-child", text: /On the slopes now.*Hana/m
     assert_select "aside section:first-child", text: /Owen/, count: 0
     assert_select "aside section:last-child", text: /Just posted.*Owen.*Hana/m
     assert_no_match "hana@example.com", response.body

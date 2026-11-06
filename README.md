@@ -2,7 +2,7 @@
 
 **Live: [alpsync.onrender.com](https://alpsync.onrender.com)**
 
-Find your people for the mountain. Riders post a ski or snowboard trip (resort, dates, languages,
+Find your ski and snowboard crew. Skiers and snowboarders post a trip (resort, dates, languages,
 riding level) with two sets of tags: what they're **looking for** and what they **can offer**.
 Alpsync matches them with riders on the same dates who fit, whether that's a driver, a lodge mate,
 or a coach, and says why each match was made.
