@@ -42,6 +42,16 @@ class TripDraftTest < ActiveSupport::TestCase
     assert_equal [ { role: "user", content: "Niseko next week" } ], request[:messages]
   end
 
+  test "tells Claude the nicknames riders use for each resort" do
+    fake = FakeClaude.new(reply: {})
+    TripDraft.client = fake
+    TripDraft.new("Revy in Feb").attributes
+
+    instructions = fake.requests.sole[:system_]
+    assert_includes instructions, "Revy: Revelstoke"
+    assert_includes instructions, "Niseko, Hirafu, Hanazono, Annupuri, ニセコ: Niseko United"
+  end
+
   test "a blank message, a refusal or an API failure becomes a friendly error" do
     assert_raises(TripDraft::Error) { TripDraft.new("   ").attributes }
     assert_raises(TripDraft::Error) { draft({}, stop_reason: :refusal) }

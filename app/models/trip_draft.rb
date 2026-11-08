@@ -70,9 +70,10 @@ class TripDraft
       Only fill in what the message says or clearly implies. Use null, or an empty list, for
       anything it doesn't mention. Never guess a name, contact or date.
 
-      - resorts: every resort on the list in the schema that the trip covers, up to #{Trip::MAX_RESORTS}. Match
-        nicknames to it ("Happo" is Hakuba Happo-one, "Whistler" is Whistler Blackcomb). Leave out
-        resorts that aren't on the list.
+      - resorts: every resort on the list in the schema that the trip covers, up to #{Trip::MAX_RESORTS}. Riders
+        often use nicknames or local names, which map like this:
+      #{nickname_guide}
+        Leave out resorts that aren't on the list.
       - languages: the languages the message is written in, plus any it mentions.
       - looking_for: what they want from others. offering: what they can provide themselves.
       #{tag_guide}
@@ -81,6 +82,12 @@ class TripDraft
       - note: one short sentence (under 200 characters) with anything else useful, in the
         message's own language. null if there's nothing to add.
     PROMPT
+  end
+
+  def nickname_guide
+    ResortCatalog::NICKNAMES.filter_map do |resort, nicknames|
+      "    - #{nicknames.join(", ")}: #{resort}" if nicknames.any?
+    end.join("\n")
   end
 
   def tag_guide
