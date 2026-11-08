@@ -78,6 +78,13 @@ class TripFlowTest < ActionDispatch::IntegrationTest
     assert_select "[data-controller=everest] a[href='https://raideresearch.com']", "Raide Research"
   end
 
+  test "the delete button is confirmed on the page, not with a browser pop-up" do
+    get manage_trip_path(@mika.edit_token)
+    assert_select "details summary", text: /Delete trip/
+    assert_select "details form[action=?] button", manage_trip_path(@mika.edit_token), text: "Yes, delete it"
+    assert_select "[data-turbo-confirm]", 0
+  end
+
   test "an unknown private link is not found" do
     get manage_trip_path("not-a-real-token")
     assert_response :not_found

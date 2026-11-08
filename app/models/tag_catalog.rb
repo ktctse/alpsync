@@ -19,7 +19,8 @@ module TagCatalog
     Tag.new(key: "idp", label: "International Driving Permit", kind: :complementary, hint: "Can legally drive in Japan"),
     Tag.new(key: "gear", label: "Gear to lend", kind: :complementary, hint: "Spare board, skis or outerwear"),
     Tag.new(key: "japanese", label: "Japanese speaker", kind: :complementary, hint: "Can help with bookings and signs"),
-    Tag.new(key: "lodge_mate", label: "Lodge mate", kind: :symmetric, hint: "Share a room or cabin"),
+    Tag.new(key: "room", label: "Spare room", kind: :complementary, hint: "A room or bed in a place that's already booked"),
+    Tag.new(key: "lodge_mate", label: "Lodge mate", kind: :symmetric, hint: "Book a place together and split it"),
     Tag.new(key: "ride_buddy", label: "Ride buddy", kind: :symmetric, hint: "Someone to ride with")
   ].freeze
 

@@ -33,6 +33,15 @@ class MatcherTest < ActiveSupport::TestCase
     assert_includes matches.last.reasons, "You both want a lodge mate"
   end
 
+  test "a spare room on offer matches a rider looking for one" do
+    me = trip("me", looking_for: %w[room])
+    host = trip("host", looking_for: %w[ride_buddy], offering: %w[room])
+
+    match = me.matches.sole
+    assert_equal host, match.trip
+    assert_includes match.reasons, "They can offer what you need: Spare room"
+  end
+
   test "riders without a shared language, overlapping dates or region are never matched" do
     me = trip("me", looking_for: %w[driver])
     trip("no_language", offering: %w[driver], languages: %w[Korean])
