@@ -1,0 +1,10 @@
+<%# "Your messages (2)" with a dot when there's something unread. Shown on the
+    rider's own trip and edit pages, so their private link always leads back
+    to their chats. %>
+<% count = Conversation.involving(trip).count %>
+<%= link_to conversations_path, class: local_assigns.fetch(:class, "inline-flex items-center gap-1.5 font-medium underline") do %>
+  Your messages<%= " (#{count})" if count.positive? %>
+  <% if unread_messages? %>
+    <span class="h-2 w-2 rounded-full bg-sky-600" role="img" aria-label="Unread messages"></span>
+  <% end %>
+<% end %>

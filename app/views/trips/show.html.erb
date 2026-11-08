@@ -10,10 +10,15 @@
     <% if @mine %>
       <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">
         <p class="font-medium text-amber-900">Your private link</p>
-        <p class="mt-1 text-amber-800">Save it to edit or delete your trip from any device. Anyone with this link can change your post.</p>
+        <p class="mt-1 text-amber-800">
+          Save it to edit your trip or get back to your messages from any device. Anyone with this link can change your post.
+        </p>
         <input readonly value="<%= manage_trip_url(@trip.edit_token) %>" aria-label="Private link"
                class="mt-2 w-full rounded-md border border-amber-300 bg-white px-2 py-1 text-xs text-slate-700" onclick="this.select()">
-        <%= link_to "Edit trip", manage_trip_path(@trip.edit_token), class: "mt-2 inline-block font-medium text-amber-900 underline" %>
+        <div class="mt-2 flex flex-wrap gap-4 text-amber-900">
+          <%= link_to "Edit trip", manage_trip_path(@trip.edit_token), class: "font-medium underline" %>
+          <%= render "messages_link", trip: @trip %>
+        </div>
       </div>
     <% end %>
   </section>

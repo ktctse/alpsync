@@ -41,6 +41,19 @@ class ConversationsTest < ActionDispatch::IntegrationTest
     assert_not conversation.reload.unread_for?(mika)
   end
 
+  test "the private link leads to your messages from the trip and edit pages" do
+    wing, wing_browser = rider("Wing")
+    mika, = rider("Mika")
+    Conversation.between(wing, mika).messages.create!(sender: mika, body: "Hi Wing")
+
+    wing_browser.get manage_trip_path(wing.edit_token)
+    assert_match %r{href="/conversations"[^>]*>\s*Your messages \(1\)}, wing_browser.response.body
+    assert_match "Unread messages", wing_browser.response.body
+
+    wing_browser.get trip_path(wing)
+    assert_match %r{href="/conversations"[^>]*>\s*Your messages \(1\)}, wing_browser.response.body
+  end
+
   test "riders outside a conversation can't read or write in it" do
     wing, = rider("Wing")
     mika, = rider("Mika")
