@@ -25,3 +25,7 @@ services:
       # public traffic to port 10000 by default.
       - key: HTTP_PORT
         value: 10000
+      # Claude API key for paste-to-post. Entered in the Render dashboard, never
+      # committed; until it's set, the paste box simply doesn't show.
+      - key: ANTHROPIC_API_KEY
+        sync: false

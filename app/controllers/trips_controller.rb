@@ -1,7 +1,14 @@
 class TripsController < ApplicationController
   TRIPS_PER_PAGE = 10
+  NEW_TRIP_DEFAULTS = { party_size: 1, skill_level: "intermediate", contact_method: "whatsapp" }.freeze
 
   before_action :set_trip_by_token, only: %i[edit update destroy]
+
+  # Each draft is a paid Claude API call, so cap how often one visitor can ask.
+  rate_limit to: 5, within: 1.minute, only: :draft,
+             with: -> { render_draft_status("That's a few tries in a row. Wait a minute, or fill the form in by hand.") }
+  rate_limit to: 30, within: 1.day, only: :draft, name: "daily",
+             with: -> { render_draft_status("You've hit today's limit for pasted messages. Fill the form in by hand.") }
 
   def index
     @filters = params.permit(:region, :language, :tag, :on)
@@ -21,7 +28,19 @@ class TripsController < ApplicationController
   end
 
   def new
-    @trip = Trip.new(resort: params[:resort], party_size: 1, skill_level: "intermediate", contact_method: "whatsapp")
+    @trip = Trip.new(resort: params[:resort], **NEW_TRIP_DEFAULTS)
+  end
+
+  # Reads a pasted group-chat message with Claude and refills the form for the
+  # rider to check. Nothing is saved until they post it themselves.
+  def draft
+    @trip = Trip.new(NEW_TRIP_DEFAULTS.merge(TripDraft.new(params[:message]).attributes))
+    render turbo_stream: [
+      turbo_stream.update("trip_form", partial: "form", locals: { trip: @trip }),
+      turbo_stream.update("draft_status", "Filled in from your message. Check everything, then post.")
+    ]
+  rescue TripDraft::Error => error
+    render_draft_status(error.message)
   end
 
   def create
@@ -52,6 +71,10 @@ class TripsController < ApplicationController
   end
 
   private
+
+  def render_draft_status(message)
+    render turbo_stream: turbo_stream.update("draft_status", message)
+  end
 
   def filtered_trips
     trips = Trip.upcoming.order(:starts_on)

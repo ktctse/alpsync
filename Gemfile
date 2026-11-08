@@ -55,3 +55,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# Claude API, for filling in a trip from a pasted group-chat message
+gem "anthropic"

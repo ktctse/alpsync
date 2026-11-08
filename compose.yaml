@@ -22,6 +22,11 @@ services:
       PGHOST: db
       PGUSER: alpsync
       PGPASSWORD: alpsync
+    # Optional: put ANTHROPIC_API_KEY=... in .env (git ignores it) to try the
+    # paste-to-post feature locally. Without it, the paste box stays hidden.
+    env_file:
+      - path: .env
+        required: false
     volumes:
       - .:/app
       - bundle:/bundle

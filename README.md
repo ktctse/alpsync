@@ -35,6 +35,22 @@ Matching lives in one class, [`app/models/matcher.rb`](app/models/matcher.rb), w
 3. **Reasons.** Every point comes with a plain-English line on the match card, such as
    "They can offer what you need: Driver".
 
+## Paste-to-post
+
+Riders already write their plans in group chats, so the new-trip page lets them paste that
+message and have Claude fill in the form
+([`app/models/trip_draft.rb`](app/models/trip_draft.rb)).
+
+- One Claude API call (Claude Opus 5.5, low effort) with a strict JSON schema whose resorts,
+  tags, languages and contact apps are the form's own options. Every value is checked again in
+  Ruby before it touches the form.
+- The form is refilled with a Turbo Stream for the rider to review. Nothing is posted
+  automatically, and the pasted message is never stored.
+- The pasted text is treated as data, not instructions, and Claude can only answer in the schema.
+- Each visitor gets 5 tries a minute and 30 a day, and messages are capped at 1,500 characters,
+  so a public page can't run up the API bill.
+- If `ANTHROPIC_API_KEY` isn't set, the paste box doesn't show and the form works as before.
+
 ## Decision log
 
 | Decision | Why | Trade-off |
@@ -45,6 +61,7 @@ Matching lives in one class, [`app/models/matcher.rb`](app/models/matcher.rb), w
 | Contact shown only to riders who posted | Stops anonymous scraping of phone numbers and makes the board reciprocal. | A small hurdle for people who just want to browse and message. |
 | Region-level matching | Riders at Hakuba Happo-one and Hakuba Goryu can easily meet up. Same resort only breaks ties. | A big region (BC) can pair riders who are hours apart. |
 | Rails 8 monolith with Hotwire | One codebase, server-rendered pages, fast to build and easy to reason about. | Less suited to very rich client-side UI (maps, drag and drop), which this product doesn't need. |
+| AI fills the form; the rider posts | Cuts posting to a paste for people who've already written their plan in a chat, while keeping them in control of what goes public. | One extra click versus auto-posting, and an API cost per paste (rate-limited). |
 
 ## What I'd measure
 
@@ -52,11 +69,12 @@ Matching lives in one class, [`app/models/matcher.rb`](app/models/matcher.rb), w
 - Match to contact-reveal rate (are the matches useful?)
 - Time from posting to first match
 - Repeat posting next trip (did it work last time?)
+- Paste-to-post: share of pastes that end in a posted trip, and how many fields riders change
+  after Claude fills them in
 
 ## What's next
 
 - Email or push notification when a new match appears (Turbo Streams for live updates)
-- Paste a WhatsApp or WeChat message and have Claude fill in the post form and tags
 - Instructor profiles with lesson booking through Shopify checkout
 - Reporting and moderation for spam posts
 

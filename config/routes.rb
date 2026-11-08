@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   root "trips#index"
 
-  resources :trips, only: %i[index show new create]
+  resources :trips, only: %i[index show new create] do
+    # Fill in the new-trip form from a pasted group-chat message
+    post :draft, on: :collection
+  end
 
   # The private link riders use to manage their own trip; the token is the key.
   get "manage/:token", to: "trips#edit", as: :manage_trip
