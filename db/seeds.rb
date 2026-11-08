@@ -8,7 +8,7 @@
 # riders are never touched.
 today = Date.current
 
-# name, resort, starts in (days), length (days), level, languages, looking for, can offer, contact, note
+# name, resort (or a list of them), starts in (days), length (days), level, languages, looking for, can offer, contact, note
 demo_trips = [
   # On the mountain now: these start in the past and renew to the same offsets.
   [ "Ryan", "Niseko United", -2, 7, "advanced", %w[English Japanese], %w[ride_buddy], %w[japanese driver], "line", "Powder's been great all week. Join me for first chair." ],
@@ -28,10 +28,10 @@ demo_trips = [
   [ "Marcus", "Niseko United", 46, 5, "advanced", %w[English], %w[room ride_buddy driver], [], "instagram", "Backcountry curious, solo trip." ],
   [ "Yuki", "Rusutsu", 44, 4, "expert", %w[Japanese English Mandarin], %w[student], %w[instructor japanese], "line", "Freestyle and park coaching." ],
   [ "Leo", "Rusutsu", 45, 3, "intermediate", %w[Mandarin English], %w[instructor driver], %w[gear], "wechat", "Want to learn ground tricks." ],
-  [ "Ada", "Kiroro", 50, 6, "intermediate", %w[English Korean], %w[ride_buddy japanese], %w[driver idp], "email", "Flying into Sapporo, renting a car." ],
+  [ "Ada", %w[Kiroro Niseko\ United], 50, 6, "intermediate", %w[English Korean], %w[ride_buddy japanese], %w[driver idp], "email", "Flying into Sapporo, renting a car." ],
   [ "Min-jun", "Kiroro", 51, 4, "advanced", %w[Korean English], %w[driver ride_buddy], [], "instagram", "Powder days only, happy to chip in for gas." ],
   [ "Megan", "Furano", 52, 5, "beginner", %w[English Cantonese], %w[instructor lodge_mate], [], "whatsapp", "Family-friendly trip with my sister." ],
-  [ "Tom", "Myoko Akakura", 60, 8, "advanced", %w[English], %w[japanese ride_buddy], %w[driver idp], "email", "Long trip, flexible dates." ],
+  [ "Tom", %w[Myoko\ Akakura Nozawa\ Onsen], 60, 8, "advanced", %w[English], %w[japanese ride_buddy], %w[driver idp], "email", "Long trip, flexible dates." ],
   [ "Kana", "Myoko Akakura", 61, 4, "intermediate", %w[Japanese English], %w[ride_buddy driver], %w[japanese], "line", "Local, can show the good tree runs." ],
   [ "Ivan", "Naeba", 62, 3, "beginner", %w[English Mandarin], %w[instructor], [], "wechat", "Short weekend trip from Tokyo." ],
   [ "Elena", "Gala Yuzawa", 63, 2, "intermediate", %w[English French], %w[ride_buddy gear], [], "instagram", "Day trip by shinkansen, need rental advice." ],
@@ -64,12 +64,12 @@ Trip.transaction do
   demo_trips.each do |name, resort, starts_in, length, level, languages, looking_for, offering, contact_method, note|
     trip = Trip.demo.find_or_initialize_by(name:)
     trip.assign_attributes(
-      resort:, skill_level: level, languages:, looking_for:, offering:, contact_method:, note:,
+      resorts: Array(resort), skill_level: level, languages:, looking_for:, offering:, contact_method:, note:,
       party_size: 1, contact_handle: "demo-only (#{name.parameterize})", avatar: demo_avatars[name]
     )
-    # Fresh dates for new or ended trips, and for a sample whose resort changed
+    # Fresh dates for new or ended trips, and for a sample whose resorts changed
     # (e.g. two names swapped), so its dates match its new place in the list.
-    if trip.new_record? || trip.ends_on < today || trip.resort_changed?
+    if trip.new_record? || trip.ends_on < today || trip.resorts_changed?
       trip.starts_on = today + starts_in
       trip.ends_on = today + starts_in + length - 1
     end

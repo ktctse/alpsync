@@ -15,7 +15,7 @@ class TripFlowTest < ActionDispatch::IntegrationTest
     assert_no_match "mika-line", response.body
 
     post trips_path, params: { trip: {
-      name: "Wing", resort: "Hakuba Happo-one", starts_on: Date.current + 30, ends_on: Date.current + 34,
+      name: "Wing", resorts: [ "Hakuba Happo-one" ], starts_on: Date.current + 30, ends_on: Date.current + 34,
       skill_level: "intermediate", party_size: 1, languages: %w[English], looking_for: %w[driver lodge_mate],
       contact_method: "email", contact_handle: "wing@example.com"
     } }
@@ -91,10 +91,10 @@ class TripFlowTest < ActionDispatch::IntegrationTest
   end
 
   test "an invalid trip re-renders the form with errors" do
-    post trips_path, params: { trip: { name: "", resort: "Nowhere", contact_method: "email" } }
+    post trips_path, params: { trip: { name: "", resorts: [ "Nowhere" ], contact_method: "email" } }
     assert_response :unprocessable_entity
     assert_select "li", text: "Name can't be blank"
-    assert_select "li", text: "Resort isn't on our list yet"
+    assert_select "li", text: "Resorts includes one that isn't on our list yet"
   end
 
   test "the feed filters by region and tag" do

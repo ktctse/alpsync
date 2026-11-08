@@ -70,8 +70,9 @@ class TripDraft
       Only fill in what the message says or clearly implies. Use null, or an empty list, for
       anything it doesn't mention. Never guess a name, contact or date.
 
-      - resort: one from the list in the schema. Match nicknames to it ("Happo" is Hakuba Happo-one,
-        "Whistler" is Whistler Blackcomb). Use null if the resort isn't on the list.
+      - resorts: every resort on the list in the schema that the trip covers, up to #{Trip::MAX_RESORTS}. Match
+        nicknames to it ("Happo" is Hakuba Happo-one, "Whistler" is Whistler Blackcomb). Leave out
+        resorts that aren't on the list.
       - languages: the languages the message is written in, plus any it mentions.
       - looking_for: what they want from others. offering: what they can provide themselves.
       #{tag_guide}
@@ -89,7 +90,7 @@ class TripDraft
   def clean(data)
     {
       name: data["name"].to_s.strip.first(40).presence,
-      resort: data["resort"].presence_in(ResortCatalog.resorts),
+      resorts: (Array(data["resorts"]) & ResortCatalog.resorts).first(Trip::MAX_RESORTS),
       starts_on: date(data["starts_on"]),
       ends_on: date(data["ends_on"]),
       skill_level: data["skill_level"].presence_in(Trip::SKILL_LEVELS),
@@ -116,11 +117,11 @@ class TripDraft
   SCHEMA = {
     "type" => "object",
     "additionalProperties" => false,
-    "required" => %w[name resort starts_on ends_on skill_level party_size languages looking_for offering
+    "required" => %w[name resorts starts_on ends_on skill_level party_size languages looking_for offering
                      contact_method contact_handle note],
     "properties" => {
       "name" => nullable("type" => "string"),
-      "resort" => nullable("type" => "string", "enum" => ResortCatalog.resorts),
+      "resorts" => choices(ResortCatalog.resorts),
       "starts_on" => nullable("type" => "string", "format" => "date"),
       "ends_on" => nullable("type" => "string", "format" => "date"),
       "skill_level" => nullable("type" => "string", "enum" => Trip::SKILL_LEVELS),

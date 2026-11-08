@@ -78,7 +78,7 @@ class TripsController < ApplicationController
 
   def filtered_trips
     trips = Trip.upcoming.order(:starts_on)
-    trips = trips.where(region: @filters[:region]) if @filters[:region].present?
+    trips = trips.where("? = ANY(regions)", @filters[:region]) if @filters[:region].present?
     trips = trips.where("? = ANY(languages)", @filters[:language]) if @filters[:language].present?
     trips = trips.where("? = ANY(looking_for) OR ? = ANY(offering)", @filters[:tag], @filters[:tag]) if @filters[:tag].present?
     if (day = Date.parse(@filters[:on].to_s) rescue nil)
@@ -94,8 +94,8 @@ class TripsController < ApplicationController
   end
 
   def trip_params
-    params.expect(trip: [ :name, :resort, :starts_on, :ends_on, :party_size, :skill_level,
+    params.expect(trip: [ :name, :starts_on, :ends_on, :party_size, :skill_level,
                           :contact_method, :contact_handle, :note,
-                          languages: [], looking_for: [], offering: [] ])
+                          resorts: [], languages: [], looking_for: [], offering: [] ])
   end
 end

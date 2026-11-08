@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* The viewer's own chat messages, marked by chat_controller.js */
+.chat-message.mine {
+  @apply ml-auto bg-sky-600 text-white ring-sky-600;
+}
+
+.chat-message.mine .chat-meta {
+  @apply text-sky-100;
+}

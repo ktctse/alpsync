@@ -10,14 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_05_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "trip_a_id", null: false
+    t.bigint "trip_b_id", null: false
+    t.datetime "trip_a_read_at"
+    t.datetime "trip_b_read_at"
+    t.datetime "reported_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trip_a_id", "trip_b_id"], name: "index_conversations_on_trip_a_id_and_trip_b_id", unique: true
+    t.index ["trip_a_id"], name: "index_conversations_on_trip_a_id"
+    t.index ["trip_b_id"], name: "index_conversations_on_trip_b_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.bigint "sender_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
   create_table "trips", force: :cascade do |t|
     t.string "name", null: false
-    t.string "resort", null: false
-    t.string "region", null: false
     t.date "starts_on", null: false
     t.date "ends_on", null: false
     t.integer "party_size", default: 1, null: false
@@ -25,16 +46,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_05_100000) do
     t.string "languages", default: [], null: false, array: true
     t.string "looking_for", default: [], null: false, array: true
     t.string "offering", default: [], null: false, array: true
-    t.string "contact_method", null: false
-    t.string "contact_handle", null: false
+    t.string "contact_method"
+    t.string "contact_handle"
     t.text "note"
     t.string "edit_token", null: false
     t.boolean "demo", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "avatar"
+    t.string "resorts", default: [], null: false, array: true
+    t.string "regions", default: [], null: false, array: true
     t.index ["edit_token"], name: "index_trips_on_edit_token", unique: true
     t.index ["languages"], name: "index_trips_on_languages", using: :gin
-    t.index ["region", "starts_on", "ends_on"], name: "index_trips_on_region_and_starts_on_and_ends_on"
+    t.index ["regions"], name: "index_trips_on_regions", using: :gin
+    t.index ["starts_on", "ends_on"], name: "index_trips_on_starts_on_and_ends_on"
   end
+
+  add_foreign_key "conversations", "trips", column: "trip_a_id", on_delete: :cascade
+  add_foreign_key "conversations", "trips", column: "trip_b_id", on_delete: :cascade
+  add_foreign_key "messages", "conversations", on_delete: :cascade
+  add_foreign_key "messages", "trips", column: "sender_id", on_delete: :cascade
 end

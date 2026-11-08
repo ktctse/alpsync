@@ -4,7 +4,8 @@ development:
 test:
   adapter: test
 
+# Alpsync runs as a single instance on Render, so the in-process adapter is
+# enough for live chat. Move to Redis (or Solid Cable) before running more
+# than one instance.
 production:
-  adapter: redis
-  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
-  channel_prefix: alpsync_production
+  adapter: async

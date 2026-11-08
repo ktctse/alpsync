@@ -11,7 +11,7 @@
               <span class="min-w-0 text-sm">
                 <span class="font-medium text-slate-900"><%= trip.name %></span>
                 <% if trip.demo? %><span class="text-[11px] text-slate-400">Sample</span><% end %>
-                <span class="block truncate text-slate-500"><%= trip.resort %></span>
+                <span class="block truncate text-slate-500"><%= resort_list(trip) %></span>
                 <span class="block text-xs text-slate-400">until <%= trip.ends_on.strftime("%b %-d") %></span>
               </span>
             <% end %>
@@ -33,7 +33,7 @@
             <span class="min-w-0 text-sm">
               <span class="font-medium text-slate-900"><%= trip.name %></span>
               <% if trip.demo? %><span class="text-[11px] text-slate-400">Sample</span><% end %>
-              <span class="block truncate text-slate-500"><%= trip.resort %></span>
+              <span class="block truncate text-slate-500"><%= resort_list(trip) %></span>
               <span class="block text-xs text-slate-400"><%= time_ago_in_words(trip.created_at) %> ago</span>
             </span>
           <% end %>

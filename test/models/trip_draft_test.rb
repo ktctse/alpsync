@@ -11,13 +11,13 @@ class TripDraftTest < ActiveSupport::TestCase
 
   test "keeps only values that match the form's own options" do
     attributes = draft({
-      "name" => "Wing", "resort" => "Hakuba Happo-one", "starts_on" => "2027-01-10", "ends_on" => "not a date",
+      "name" => "Wing", "resorts" => [ "Hakuba Happo-one", "Zermatt" ], "starts_on" => "2027-01-10", "ends_on" => "not a date",
       "skill_level" => "intermediate", "party_size" => 20, "languages" => %w[English Klingon],
       "looking_for" => %w[lodge_mate helicopter], "offering" => %w[driver lodge_mate],
       "contact_method" => "whatsapp", "contact_handle" => "+852 5555 0000", "note" => nil
     })
 
-    assert_equal "Hakuba Happo-one", attributes[:resort]
+    assert_equal [ "Hakuba Happo-one" ], attributes[:resorts]
     assert_equal Date.new(2027, 1, 10), attributes[:starts_on]
     assert_nil attributes[:ends_on]
     assert_equal 8, attributes[:party_size]
@@ -27,8 +27,8 @@ class TripDraftTest < ActiveSupport::TestCase
     assert_not attributes.key?(:note)
   end
 
-  test "drops a resort that isn't on the list" do
-    assert_nil draft({ "resort" => "Zermatt" })[:resort]
+  test "a message with only unknown resorts leaves resorts blank" do
+    assert_nil draft({ "resorts" => [ "Zermatt" ] })[:resorts]
   end
 
   test "asks Claude for strict JSON and passes the message as the user turn" do

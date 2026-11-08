@@ -9,6 +9,12 @@ module ApplicationHelper
   # "BC" rather than "British Columbia", so resort lines fit on a card.
   def short_region(region) = SHORT_REGIONS.fetch(region, region)
 
+  # "Hakuba Happo-one + Nozawa Onsen"
+  def resort_list(trip) = trip.resorts.join(" + ")
+
+  # "Hakuba Happo-one + Nozawa Onsen, Nagano"
+  def resorts_with_regions(trip) = "#{resort_list(trip)}, #{trip.regions.map { |region| short_region(region) }.join(' / ')}"
+
   # "Jan 10–14", or "Jan 30–Feb 3" when the trip crosses a month.
   def trip_dates(trip)
     starts, ends = trip.starts_on, trip.ends_on

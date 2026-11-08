@@ -16,8 +16,8 @@
         <%= f.text_field :name, class: field_class, placeholder: "Wing", autocomplete: "given-name" %>
       </div>
       <div>
-        <%= f.label :resort, class: "mb-1 block text-sm text-slate-700" %>
-        <%= f.select :resort, grouped_options_for_select(ResortCatalog::REGIONS, trip.resort), { include_blank: "Pick a resort" }, class: field_class %>
+        <%= f.label :party_size, "People in your group", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.number_field :party_size, min: 1, max: 8, class: field_class %>
       </div>
       <div>
         <%= f.label :starts_on, "First day", class: "mb-1 block text-sm text-slate-700" %>
@@ -31,11 +31,29 @@
         <%= f.label :skill_level, "Riding level", class: "mb-1 block text-sm text-slate-700" %>
         <%= f.select :skill_level, Trip::SKILL_LEVELS.map { |level| [ level.capitalize, level ] }, {}, class: field_class %>
       </div>
-      <div>
-        <%= f.label :party_size, "People in your group", class: "mb-1 block text-sm text-slate-700" %>
-        <%= f.number_field :party_size, min: 1, max: 8, class: field_class %>
-      </div>
     </div>
+
+    <%# Several resorts in one date range, grouped by region %>
+    <fieldset>
+      <legend class="mb-2 text-sm text-slate-700">Resorts <span class="text-slate-400">(up to <%= Trip::MAX_RESORTS %>)</span></legend>
+      <%= hidden_field_tag "trip[resorts][]", "", id: nil %>
+      <div class="space-y-3">
+        <% ResortCatalog::REGIONS.each do |region, resorts| %>
+          <div>
+            <p class="mb-1.5 text-xs text-slate-500"><%= region %></p>
+            <div class="flex flex-wrap gap-2">
+              <% resorts.each do |resort| %>
+                <label class="cursor-pointer">
+                  <%= check_box_tag "trip[resorts][]", resort, trip.resorts.include?(resort),
+                                    id: "trip_resorts_#{resort.parameterize}", class: "peer sr-only" %>
+                  <span class="inline-block rounded-full border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-sky-300"><%= resort %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </fieldset>
 
     <fieldset>
       <legend class="mb-2 text-sm text-slate-700">Languages you speak</legend>
@@ -84,8 +102,8 @@
 
   <section class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
     <div>
-      <h2 class="font-semibold text-slate-900">Contact</h2>
-      <p class="text-sm text-slate-500">Only riders who have posted a trip can see this, never anonymous visitors.</p>
+      <h2 class="font-semibold text-slate-900">Contact <span class="font-normal text-slate-400">(optional)</span></h2>
+      <p class="text-sm text-slate-500">Share a handle now, or keep it to Alpsync messages. Only riders who have posted a trip can see it, never anonymous visitors.</p>
     </div>
     <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
       <div>

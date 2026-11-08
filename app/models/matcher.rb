@@ -1,7 +1,7 @@
 # Finds and ranks other trips that suit a given trip.
 #
-# Step 1 (hard filters, in SQL): still upcoming, same region, overlapping dates,
-# and at least one shared language. A match you can't talk to isn't a match.
+# Step 1 (hard filters, in SQL): still upcoming, at least one region in common,
+# overlapping dates, and a shared language. A match you can't talk to isn't a match.
 #
 # Step 2 (scoring, in Ruby): points for each need the other rider covers, in
 # both directions, a bonus when it works both ways, and small tie-breakers.
@@ -35,7 +35,7 @@ class Matcher
   def candidates
     Trip.upcoming
         .where.not(id: trip.id)
-        .where(region: trip.region)
+        .where("regions && ARRAY[?]::varchar[]", trip.regions)
         .where("starts_on <= ? AND ends_on >= ?", trip.ends_on, trip.starts_on)
         .where("languages && ARRAY[?]::varchar[]", trip.languages)
   end
@@ -68,9 +68,10 @@ class Matcher
       reasons << "You both want a #{TagCatalog.labels(shared).to_sentence.downcase}"
     end
     score += POINTS[:mutual_bonus] if mutual
-    if other.resort == trip.resort
+    same_resorts = trip.resorts & other.resorts
+    if same_resorts.any?
       score += POINTS[:same_resort]
-      reasons << "Same resort: #{trip.resort}"
+      reasons << "#{'Same resort'.pluralize(same_resorts.size)}: #{same_resorts.to_sentence}"
     end
     if shared.include?("ride_buddy") && similar_level?(other)
       score += POINTS[:similar_level]

@@ -1,0 +1,35 @@
+<% content_for :title, "Messages · Alpsync" %>
+
+<div class="mx-auto max-w-2xl">
+  <h1 class="mb-1 text-2xl font-semibold text-slate-900">Messages</h1>
+  <p class="mb-6 text-slate-600">Chats about your <%= resort_list(my_trip) %> trip, <%= trip_dates(my_trip) %>.</p>
+
+  <% if @conversations.any? %>
+    <ul class="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+      <% @conversations.each do |conversation| %>
+        <% other = conversation.other(my_trip) %>
+        <% latest = conversation.messages.last %>
+        <li>
+          <%= link_to conversation, class: "flex items-center gap-3 px-4 py-3 hover:bg-slate-50" do %>
+            <%= avatar_tag(other) %>
+            <span class="min-w-0 flex-1">
+              <span class="flex items-center gap-2">
+                <span class="font-medium text-slate-900"><%= other.name %></span>
+                <% if conversation.unread_for?(my_trip) %>
+                  <span class="h-2 w-2 rounded-full bg-sky-600" role="img" aria-label="Unread"></span>
+                <% end %>
+              </span>
+              <span class="block truncate text-sm text-slate-500"><%= latest ? latest.body : "No messages yet" %></span>
+            </span>
+            <span class="shrink-0 text-xs text-slate-400"><%= time_ago_in_words(conversation.updated_at) %> ago</span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-slate-600">
+      No messages yet. Open <%= link_to "your matches", trip_path(my_trip), class: "font-medium text-sky-700 underline" %>
+      and message a rider who fits.
+    </div>
+  <% end %>
+</div>

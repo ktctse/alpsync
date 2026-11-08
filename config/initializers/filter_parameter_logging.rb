@@ -5,6 +5,6 @@
 # See the ActiveSupport::ParameterFilter documentation for supported notations and behaviors.
 Rails.application.config.filter_parameters += [
   :passw, :email, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn, :cvv, :cvc,
-  # Riders' pasted chat messages and contact details stay out of the logs.
-  :message, :contact_handle
+  # Riders' pasted chat messages, contact details and chat messages stay out of the logs.
+  :message, :contact_handle, :body
 ]

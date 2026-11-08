@@ -1,0 +1,10 @@
+<%= form_with model: [ conversation, message ], id: "message_form", class: "mt-4" do |f| %>
+  <% if message.errors.any? %>
+    <p class="mb-2 text-sm text-red-700"><%= message.errors.full_messages.to_sentence %></p>
+  <% end %>
+  <div class="flex items-end gap-2">
+    <%= f.text_area :body, rows: 2, required: true, maxlength: Message::MAX_LENGTH, class: field_class,
+                    placeholder: "Write a message", "aria-label": "Message" %>
+    <%= f.submit "Send", class: "cursor-pointer rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" %>
+  </div>
+<% end %>

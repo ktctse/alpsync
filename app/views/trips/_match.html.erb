@@ -4,7 +4,7 @@
     <%= avatar_tag(match.trip, size: "h-10 w-10") %>
     <h3 class="font-semibold text-slate-900">
       <%= link_to match.trip.name, match.trip, class: "hover:underline" %>
-      <span class="text-sm font-normal text-slate-500">· <%= match.trip.skill_level %> · <%= match.trip.resort %></span>
+      <span class="text-sm font-normal text-slate-500">· <%= match.trip.skill_level %> · <%= resort_list(match.trip) %></span>
       <% if match.trip.demo? %><span class="ml-1 rounded bg-slate-100 px-1.5 py-0.5 align-middle text-[11px] font-normal text-slate-500">Sample</span><% end %>
     </h3>
     </div>

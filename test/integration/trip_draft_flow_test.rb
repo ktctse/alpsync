@@ -18,7 +18,7 @@ class TripDraftFlowTest < ActionDispatch::IntegrationTest
 
   test "pasting a message refills the form for the rider to check" do
     TripDraft.client = FakeClaude.new(reply: {
-      "name" => "Wing", "resort" => "Niseko United", "looking_for" => %w[driver], "languages" => %w[Cantonese]
+      "name" => "Wing", "resorts" => [ "Niseko United", "Rusutsu" ], "looking_for" => %w[driver], "languages" => %w[Cantonese]
     })
 
     post draft_trips_path, params: { message: "Niseko 12-15 Jan, need a ride, Cantonese ok" }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
@@ -26,7 +26,8 @@ class TripDraftFlowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match 'turbo-stream action="update" target="trip_form"', response.body
     assert_match 'value="Wing"', response.body
-    assert_match '<option selected="selected" value="Niseko United">', response.body
+    assert_match(/value="Niseko United"[^>]*checked="checked"/, response.body)
+    assert_match(/value="Rusutsu"[^>]*checked="checked"/, response.body)
     assert_match "Check everything, then post", response.body
     assert_equal 0, Trip.count, "nothing is saved until the rider posts"
   end

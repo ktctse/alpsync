@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  helper_method :my_trip, :can_see_contact?
+  helper_method :my_trip, :can_see_contact?, :unread_messages?
 
   private
 
@@ -23,5 +23,13 @@ class ApplicationController < ActionController::Base
   # so anonymous visitors and scrapers can't harvest phone numbers.
   def can_see_contact?(trip)
     my_trip.present? || trip == my_trip
+  end
+
+  # For the dot on "Messages" in the header.
+  def unread_messages?
+    return false unless my_trip
+
+    @unread_messages = Conversation.involving(my_trip).any? { |conversation| conversation.unread_for?(my_trip) } unless defined?(@unread_messages)
+    @unread_messages
   end
 end

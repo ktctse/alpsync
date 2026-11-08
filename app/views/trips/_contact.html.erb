@@ -1,10 +1,17 @@
-<div class="mt-auto border-t border-slate-100 pt-3 text-sm">
+<div class="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 text-sm">
   <% if can_see_contact?(trip) %>
-    <span class="text-slate-500"><%= trip.contact_label %>:</span>
-    <span class="font-medium text-slate-800"><%= trip.contact_handle %></span>
+    <% if trip.contact_handle.present? %>
+      <span>
+        <span class="text-slate-500"><%= trip.contact_label %>:</span>
+        <span class="font-medium text-slate-800"><%= trip.contact_handle %></span>
+      </span>
+    <% else %>
+      <span class="text-slate-500">Talks on Alpsync</span>
+    <% end %>
+    <%= render "trips/message_button", trip: %>
   <% else %>
     <span class="text-slate-500">
-      Contact details unlock once you <%= link_to "post your trip", new_trip_path(resort: trip.resort), class: "font-medium text-sky-700 underline" %>.
+      Contact details and messages unlock once you <%= link_to "post your trip", new_trip_path(resort: trip.resorts.first), class: "font-medium text-sky-700 underline" %>.
     </span>
   <% end %>
 </div>

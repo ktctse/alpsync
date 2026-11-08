@@ -51,6 +51,20 @@ message and have Claude fill in the form
   so a public page can't run up the API bill.
 - If `ANTHROPIC_API_KEY` isn't set, the paste box doesn't show and the form works as before.
 
+## Messages
+
+Riders who have posted a trip can message each other from a match or a trip page
+([`conversations_controller.rb`](app/controllers/conversations_controller.rb)).
+
+- A conversation belongs to exactly two trips. With no accounts, "you" are the trip this browser
+  posted, so you can only open conversations your trip is part of.
+- New messages appear live for both riders (Turbo Streams over Action Cable). Production uses the
+  in-process cable adapter, which is enough for one instance; more instances would need Redis or
+  Solid Cable.
+- Sharing a phone number or handle on a trip is optional, so riders can talk here first.
+- Messages are deleted with either trip, kept out of the logs, rate-limited, and a conversation can
+  be reported. Sample riders can't be messaged.
+
 ## Decision log
 
 | Decision | Why | Trade-off |
@@ -62,6 +76,8 @@ message and have Claude fill in the form
 | Region-level matching | Riders at Hakuba Happo-one and Hakuba Goryu can easily meet up. Same resort only breaks ties. | A big region (BC) can pair riders who are hours apart. |
 | Rails 8 monolith with Hotwire | One codebase, server-rendered pages, fast to build and easy to reason about. | Less suited to very rich client-side UI (maps, drag and drop), which this product doesn't need. |
 | AI fills the form; the rider posts | Cuts posting to a paste for people who've already written their plan in a chat, while keeping them in control of what goes public. | One extra click versus auto-posting, and an API cost per paste (rate-limited). |
+| Several resorts, one date range | Many trips take in two or three resorts nearby. Riders match when they share a region; shared resorts rank higher. | Can match riders at different resorts on a given day; trip legs with their own dates would be more precise. |
+| Chat between trips, before contact details | Riders can size each other up before sharing a phone number, and it keeps the first conversation on Alpsync. | Stored messages to protect and moderate; no notifications yet, so riders have to check back. |
 
 ## What I'd measure
 
@@ -74,9 +90,9 @@ message and have Claude fill in the form
 
 ## What's next
 
-- Email or push notification when a new match appears (Turbo Streams for live updates)
+- Email or push notification for new matches and new messages
 - Instructor profiles with lesson booking through Shopify checkout
-- Reporting and moderation for spam posts
+- A review queue for reported conversations, and moderation for spam posts
 
 ## Running it locally
 

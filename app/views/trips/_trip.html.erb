@@ -11,7 +11,7 @@
         </h3>
         <span class="shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-700"><%= trip_dates(trip) %></span>
       </div>
-      <p class="truncate text-sm text-slate-600"><%= trip.resort %>, <%= short_region(trip.region) %></p>
+      <p class="truncate text-sm text-slate-600" title="<%= resorts_with_regions(trip) %>"><%= resorts_with_regions(trip) %></p>
       <p class="text-xs text-slate-500"><%= trip.skill_level.capitalize %></p>
     </div>
   </div>

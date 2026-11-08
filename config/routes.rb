@@ -4,6 +4,13 @@ Rails.application.routes.draw do
   resources :trips, only: %i[index show new create] do
     # Fill in the new-trip form from a pasted group-chat message
     post :draft, on: :collection
+    # Start (or reopen) a chat with this trip's rider
+    resource :conversation, only: :create
+  end
+
+  resources :conversations, only: %i[index show] do
+    resources :messages, only: :create
+    patch :report, on: :member
   end
 
   # The private link riders use to manage their own trip; the token is the key.

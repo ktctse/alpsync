@@ -1,0 +1,9 @@
+<%# "Message <name>" for riders who have posted a trip of their own %>
+<% if my_trip && trip != my_trip %>
+  <% if trip.demo? %>
+    <span class="text-xs text-slate-400">Sample rider, can't reply</span>
+  <% else %>
+    <%= button_to "Message #{trip.name}", trip_conversation_path(trip),
+                  class: "cursor-pointer rounded-lg border border-sky-300 px-3 py-1.5 text-sm text-sky-700 hover:bg-sky-50" %>
+  <% end %>
+<% end %>
