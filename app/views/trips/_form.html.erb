@@ -12,11 +12,11 @@
     <h2 class="font-semibold text-slate-900">Your trip</h2>
     <div class="grid gap-4 sm:grid-cols-2">
       <div>
-        <%= f.label :name, "First name or nickname", class: "mb-1 block text-sm text-slate-700" %>
-        <%= f.text_field :name, class: field_class, placeholder: "Wing", autocomplete: "given-name" %>
+        <%= f.label :name, "Name", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.text_field :name, class: field_class, placeholder: "Shaun", autocomplete: "given-name" %>
       </div>
       <div>
-        <%= f.label :party_size, "People in your group", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.label :party_size, "Group size", class: "mb-1 block text-sm text-slate-700" %>
         <%= f.number_field :party_size, min: 1, max: 8, class: field_class %>
       </div>
       <div>
@@ -28,7 +28,7 @@
         <%= f.date_field :ends_on, class: field_class %>
       </div>
       <div>
-        <%= f.label :skill_level, "Riding level", class: "mb-1 block text-sm text-slate-700" %>
+        <%= f.label :skill_level, "Skill level", class: "mb-1 block text-sm text-slate-700" %>
         <%= f.select :skill_level, Trip::SKILL_LEVELS.map { |level| [ level.capitalize, level ] }, {}, class: field_class %>
       </div>
     </div>
@@ -103,7 +103,7 @@
   <section class="space-y-4 rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
     <div>
       <h2 class="font-semibold text-slate-900">Contact <span class="font-normal text-slate-400">(optional)</span></h2>
-      <p class="text-sm text-slate-500">Share a handle now, or keep it to Alpsync messages. Only riders who have posted a trip can see it, never anonymous visitors.</p>
+      <p class="text-sm text-slate-500">Share a handle now, or stay on Alpsync for private messages.</p>
     </div>
     <div class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
       <div>
@@ -112,11 +112,11 @@
       </div>
       <div>
         <%= f.label :contact_handle, "Handle or number", class: "mb-1 block text-sm text-slate-700" %>
-        <%= f.text_field :contact_handle, class: field_class, placeholder: "@wing.rides" %>
+        <%= f.text_field :contact_handle, class: field_class, placeholder: "@shaun.rides" %>
       </div>
     </div>
     <div>
-      <%= f.label :note, "Anything else? (optional)", class: "mb-1 block text-sm text-slate-700" %>
+      <%= f.label :note, "Notes (optional)", class: "mb-1 block text-sm text-slate-700" %>
       <%= f.text_area :note, rows: 3, maxlength: 500, class: field_class, placeholder: "Arriving by bus from Tokyo, happy to split a cabin." %>
     </div>
   </section>
