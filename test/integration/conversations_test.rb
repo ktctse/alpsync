@@ -54,6 +54,22 @@ class ConversationsTest < ActionDispatch::IntegrationTest
     assert_match %r{href="/conversations"[^>]*>\s*Your messages \(1\)}, wing_browser.response.body
   end
 
+  test "visitors see matches and messages locked, with a hint on how to unlock them" do
+    get root_path
+    assert_select "header nav a[href=?]", conversations_path, 0
+    assert_select "header nav span.cursor-not-allowed", text: /matches/
+    assert_select "header nav span.cursor-not-allowed", text: "Messages"
+    assert_select "header [data-controller=hint] button[aria-describedby=locked_hint]"
+    assert_select "#locked_hint[role=tooltip]", text: /Post a trip to unlock your matches and messages/
+
+    wing, wing_browser = rider("Wing")
+    wing_browser.get root_path
+    header = wing_browser.response.parsed_body.at_css("header nav")
+    assert header.at_css("a[href='#{conversations_path}']"), "Messages is a real link"
+    assert header.at_css("a[href='#{trip_path(wing)}']"), "Your matches is a real link"
+    assert_nil header.at_css("#locked_hint")
+  end
+
   test "riders outside a conversation can't read or write in it" do
     wing, = rider("Wing")
     mika, = rider("Mika")
