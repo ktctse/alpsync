@@ -1,9 +1,9 @@
-<%# "Message <name>" for riders who have posted a trip of their own %>
+<%# "Message <name>" for riders who have posted a trip of their own. Sample
+    riders answer once, automatically (SampleReplyJob). %>
 <% if my_trip && trip != my_trip %>
-  <% if trip.demo? %>
-    <span class="text-xs text-slate-400">Sample rider, can't reply</span>
-  <% else %>
-    <%= button_to "Message #{trip.name}", trip_conversation_path(trip),
+  <span class="inline-flex items-center gap-2">
+    <% if trip.demo? %><span class="text-xs text-slate-400">Sample, replies automatically</span><% end %>
+    <%= button_to "Message #{trip.name}", trip_conversation_path(trip), form_class: "inline",
                   class: "cursor-pointer rounded-lg border border-sky-300 px-3 py-1.5 text-sm text-sky-700 hover:bg-sky-50" %>
-  <% end %>
+  </span>
 <% end %>

@@ -91,13 +91,34 @@ class ConversationsTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_trip_path
   end
 
-  test "sample riders can't be messaged" do
-    _, wing_browser = rider("Wing")
-    sample, = rider("Sample", demo: true)
+  test "messaging a sample rider gets one automatic reply, pushed live" do
+    wing, wing_browser = rider("Wing")
+    ryan, = rider("Ryan", demo: true)
 
-    wing_browser.post trip_conversation_path(sample)
-    assert_equal trip_path(sample), URI(wing_browser.response.location).path
-    assert_equal 0, Conversation.count
+    wing_browser.post trip_conversation_path(ryan)
+    conversation = Conversation.between(wing, ryan)
+    assert_equal conversation_path(conversation), URI(wing_browser.response.location).path
+
+    2.times do
+      wing_browser.post conversation_messages_path(conversation), params: { message: { body: "Hi Ryan" } }, headers: turbo_stream
+    end
+    assert_enqueued_jobs 1, only: SampleReplyJob
+
+    assert_turbo_stream_broadcasts conversation, count: 1 do
+      perform_enqueued_jobs only: SampleReplyJob
+    end
+    reply = conversation.messages.last
+    assert_equal ryan, reply.sender
+    assert_match "Hey Wing! I'm Ryan, one of Alpsync's sample riders", reply.body
+  end
+
+  test "real riders don't get automatic replies" do
+    wing, wing_browser = rider("Wing")
+    mika, = rider("Mika")
+    conversation = Conversation.between(wing, mika)
+
+    wing_browser.post conversation_messages_path(conversation), params: { message: { body: "Hi" } }, headers: turbo_stream
+    assert_no_enqueued_jobs only: SampleReplyJob
   end
 
   test "one conversation per pair of trips, whoever starts it" do

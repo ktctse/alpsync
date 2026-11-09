@@ -20,8 +20,6 @@ class ConversationsController < ApplicationController
     other = Trip.upcoming.find(params[:trip_id])
     if other == my_trip
       redirect_to other, notice: "That's your own trip."
-    elsif other.demo?
-      redirect_to other, notice: "#{other.name} is a sample rider, so they can't reply. Message a real rider instead."
     else
       redirect_to Conversation.between(my_trip, other)
     end
