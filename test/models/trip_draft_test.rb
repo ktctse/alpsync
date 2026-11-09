@@ -37,7 +37,8 @@ class TripDraftTest < ActiveSupport::TestCase
     TripDraft.new("  Niseko next week  ").attributes
 
     request = fake.requests.sole
-    assert_equal "claude-opus-5-5", request[:model]
+    assert_equal "claude-haiku-5-5", request[:model]
+    assert_nil request[:fallbacks], "Haiku has no server-side fallback"
     assert_equal :json_schema, request[:output_config][:format_][:type]
     assert_equal [ { role: "user", content: "Niseko next week" } ], request[:messages]
   end

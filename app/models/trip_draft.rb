@@ -5,7 +5,9 @@
 class TripDraft
   class Error < StandardError; end
 
-  MODEL = "claude-opus-5-5"
+  # Haiku is the low-cost model for extraction like this; it keeps a $1/month
+  # API budget good for roughly a thousand pastes.
+  MODEL = "claude-haiku-5-5"
   MAX_MESSAGE_LENGTH = 1500
 
   class << self
@@ -48,15 +50,15 @@ class TripDraft
       max_tokens: 4_000,
       system_: instructions,
       messages: [ { role: "user", content: @message } ],
-      output_config: { effort: :low, format_: { type: :json_schema, schema: SCHEMA } },
-      # If the model declines, the API retries on a suitable fallback model.
-      fallbacks: :default,
-      betas: [ "server-side-fallback-2026-07-01" ]
+      output_config: { effort: :low, format_: { type: :json_schema, schema: SCHEMA } }
     )
+    # A decline (stop_reason :refusal) can't fall back to another model on
+    # Haiku, so it ends here with the friendly message below.
     unless response.stop_reason == :end_turn
       raise Error, "Couldn't read that message. Try rewording it, or fill the form in by hand."
     end
 
+    # The reply can start with a thinking block, so look for the text by type.
     response.content.find { |block| block.type == :text }&.text.to_s
   end
 
