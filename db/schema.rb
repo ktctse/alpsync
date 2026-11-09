@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_09_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,6 +25,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
     t.index ["trip_a_id", "trip_b_id"], name: "index_conversations_on_trip_a_id_and_trip_b_id", unique: true
     t.index ["trip_a_id"], name: "index_conversations_on_trip_a_id"
     t.index ["trip_b_id"], name: "index_conversations_on_trip_b_id"
+  end
+
+  create_table "draft_usages", force: :cascade do |t|
+    t.date "day", null: false
+    t.integer "count", default: 0, null: false
+    t.index ["day"], name: "index_draft_usages_on_day", unique: true
   end
 
   create_table "messages", force: :cascade do |t|

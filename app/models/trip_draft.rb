@@ -29,6 +29,7 @@ class TripDraft
   # returned, and every value is checked against the form's own options.
   def attributes
     raise Error, "Paste a message first." if @message.blank?
+    raise Error, "Pasted messages have hit today's limit for the whole site. Fill the form in by hand." unless DraftUsage.take
 
     clean(JSON.parse(reply_text))
   rescue Anthropic::Errors::RateLimitError, Anthropic::Errors::APIConnectionError
@@ -43,7 +44,8 @@ class TripDraft
   def reply_text
     response = self.class.client.beta.messages.create(
       model: MODEL,
-      max_tokens: 16_000,
+      # The reply is a short JSON object; this caps what one request can cost.
+      max_tokens: 4_000,
       system_: instructions,
       messages: [ { role: "user", content: @message } ],
       output_config: { effort: :low, format_: { type: :json_schema, schema: SCHEMA } },

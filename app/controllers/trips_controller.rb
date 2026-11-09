@@ -5,9 +5,10 @@ class TripsController < ApplicationController
   before_action :set_trip_by_token, only: %i[edit update destroy]
 
   # Each draft is a paid Claude API call, so cap how often one visitor can ask.
-  rate_limit to: 5, within: 1.minute, only: :draft,
+  # DraftUsage also caps the whole site per day.
+  rate_limit to: 3, within: 1.minute, only: :draft,
              with: -> { render_draft_status("That's a few tries in a row. Wait a minute, or fill the form in by hand.") }
-  rate_limit to: 30, within: 1.day, only: :draft, name: "daily",
+  rate_limit to: 10, within: 1.day, only: :draft, name: "daily",
              with: -> { render_draft_status("You've hit today's limit for pasted messages. Fill the form in by hand.") }
 
   def index

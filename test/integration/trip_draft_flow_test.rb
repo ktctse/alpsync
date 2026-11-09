@@ -2,7 +2,10 @@ require "test_helper"
 require "support/fake_claude"
 
 class TripDraftFlowTest < ActionDispatch::IntegrationTest
-  teardown { TripDraft.client = nil }
+  teardown do
+    TripDraft.client = nil
+    DraftUsage.daily_limit = 50
+  end
 
   test "the paste box only shows once Claude is configured" do
     TripDraft.client = nil
@@ -40,6 +43,25 @@ class TripDraftFlowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match 'target="draft_status"', response.body
     assert_no_match 'target="trip_form"', response.body
+  end
+
+  test "a site-wide daily cap stops Claude calls whoever is asking" do
+    fake = TripDraft.client = FakeClaude.new(reply: { "name" => "Wing" })
+    DraftUsage.daily_limit = 2
+
+    3.times { post draft_trips_path, params: { message: "Niseko next week" }, headers: { "Accept" => "text/vnd.turbo-stream.html" } }
+
+    assert_equal 2, fake.requests.size
+    assert_match "today's limit for the whole site", response.body
+  end
+
+  test "a blank paste doesn't use up the daily allowance" do
+    TripDraft.client = FakeClaude.new
+
+    post draft_trips_path, params: { message: "  " }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    assert_match "Paste a message first", response.body
+    assert_equal 0, DraftUsage.sum(:count)
   end
 
   private
