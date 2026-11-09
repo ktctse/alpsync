@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_09_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_09_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,8 +68,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_09_090000) do
     t.index ["starts_on", "ends_on"], name: "index_trips_on_starts_on_and_ends_on"
   end
 
+  create_table "unmatches", force: :cascade do |t|
+    t.bigint "trip_id", null: false
+    t.bigint "other_trip_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["other_trip_id"], name: "index_unmatches_on_other_trip_id"
+    t.index ["trip_id", "other_trip_id"], name: "index_unmatches_on_trip_id_and_other_trip_id", unique: true
+    t.index ["trip_id"], name: "index_unmatches_on_trip_id"
+  end
+
   add_foreign_key "conversations", "trips", column: "trip_a_id", on_delete: :cascade
   add_foreign_key "conversations", "trips", column: "trip_b_id", on_delete: :cascade
   add_foreign_key "messages", "conversations", on_delete: :cascade
   add_foreign_key "messages", "trips", column: "sender_id", on_delete: :cascade
+  add_foreign_key "unmatches", "trips", column: "other_trip_id", on_delete: :cascade
+  add_foreign_key "unmatches", "trips", on_delete: :cascade
 end

@@ -1,7 +1,14 @@
 <%# Rendered the same for both riders (it's broadcast to both); chat_controller.js
-    marks the viewer's own messages. %>
+    marks the viewer's own messages, and only those show the Delete link. It's
+    a Turbo link rather than a form, so the broadcast copy carries no CSRF token:
+    Turbo sends the page's own token in a header. %>
 <div id="<%= dom_id(message) %>" data-sender="<%= message.sender_id %>"
      class="chat-message max-w-[80%] rounded-2xl bg-white px-3 py-2 text-slate-800 ring-1 ring-slate-200">
   <p class="text-sm break-words whitespace-pre-line"><%= message.body %></p>
-  <p class="chat-meta mt-1 text-[11px] text-slate-400"><%= message.sender.name %> · <%= l(message.created_at, format: :short) %></p>
+  <p class="chat-meta mt-1 text-[11px] text-slate-400">
+    <%= message.sender.name %> · <%= l(message.created_at, format: :short) %>
+    <span class="chat-delete"> · <%= link_to "Delete", conversation_message_path(message.conversation_id, message),
+                                             data: { turbo_method: :delete }, class: "underline hover:no-underline",
+                                             "aria-label": "Delete this message" %></span>
+  </p>
 </div>

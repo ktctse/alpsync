@@ -8,3 +8,12 @@
 .chat-message.mine .chat-meta {
   @apply text-sky-100;
 }
+
+/* Only the viewer's own messages can be deleted */
+.chat-message .chat-delete {
+  @apply hidden;
+}
+
+.chat-message.mine .chat-delete {
+  @apply inline;
+}

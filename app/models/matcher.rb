@@ -34,7 +34,7 @@ class Matcher
 
   def candidates
     Trip.upcoming
-        .where.not(id: trip.id)
+        .where.not(id: [ trip.id, *trip.unmatched_trip_ids ])
         .where("regions && ARRAY[?]::varchar[]", trip.regions)
         .where("starts_on <= ? AND ends_on >= ?", trip.ends_on, trip.starts_on)
         .where("languages && ARRAY[?]::varchar[]", trip.languages)

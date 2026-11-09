@@ -1,0 +1,9 @@
+<%# "Unmatch", confirmed on the page rather than with a browser pop-up %>
+<details class="<%= local_assigns.fetch(:class, "") %>">
+  <summary class="inline cursor-pointer list-none text-xs text-slate-400 hover:text-slate-600">Unmatch</summary>
+  <div class="mt-2 flex flex-wrap items-center gap-3 text-left <%= "justify-end" if local_assigns[:align_end] %>">
+    <p class="text-sm text-slate-700">Unmatch <%= trip.name %>? You'll drop out of each other's matches and your chat will be deleted.</p>
+    <%= button_to "Yes, unmatch", trip_unmatch_path(trip),
+                  class: "cursor-pointer rounded-lg border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50" %>
+  </div>
+</details>

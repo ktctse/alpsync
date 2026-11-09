@@ -121,6 +121,55 @@ class ConversationsTest < ActionDispatch::IntegrationTest
     assert_no_enqueued_jobs only: SampleReplyJob
   end
 
+  test "unmatching drops both riders from each other's matches and ends their chat" do
+    wing, wing_browser = rider("Wing")
+    mika, mika_browser = rider("Mika", contact_method: "line", contact_handle: "mika-line")
+    conversation = Conversation.between(wing, mika)
+    conversation.messages.create!(sender: mika, body: "Hi Wing")
+    assert_includes wing.matches.map(&:trip), mika
+
+    wing_browser.post trip_unmatch_path(mika)
+    assert_equal trip_path(wing), URI(wing_browser.response.location).path
+
+    assert_not Conversation.exists?(conversation.id)
+    assert_equal 0, Message.count
+    assert_not_includes Trip.find(wing.id).matches.map(&:trip), mika
+    assert_not_includes Trip.find(mika.id).matches.map(&:trip), wing, "it works both ways"
+
+    # Mika can't start a new chat, and the old one has gone
+    mika_browser.post trip_conversation_path(wing)
+    assert_equal trip_path(wing), URI(mika_browser.response.location).path
+    assert_equal 0, Conversation.count
+    mika_browser.post conversation_messages_path(conversation), params: { message: { body: "Hello?" } }, headers: turbo_stream
+    assert_match "This chat has ended", mika_browser.response.body
+
+    # Wing sees Mika's trip without the message button or contact handle
+    wing_browser.get trip_path(mika)
+    assert_match "Unmatched", wing_browser.response.body
+    assert_no_match "mika-line", wing_browser.response.body
+  end
+
+  test "riders can delete their own messages, and it disappears for both" do
+    wing, wing_browser = rider("Wing")
+    mika, mika_browser = rider("Mika")
+    conversation = Conversation.between(wing, mika)
+    mine = conversation.messages.create!(sender: wing, body: "Wrong chat, sorry")
+    theirs = conversation.messages.create!(sender: mika, body: "Hi Wing")
+
+    assert_turbo_stream_broadcasts conversation, count: 1 do
+      wing_browser.delete conversation_message_path(conversation, mine), headers: turbo_stream
+    end
+    assert_match %(action="remove" target="#{ActionView::RecordIdentifier.dom_id(mine)}"), wing_browser.response.body
+    assert_not Message.exists?(mine.id)
+
+    wing_browser.delete conversation_message_path(conversation, theirs), headers: turbo_stream
+    assert_equal 404, wing_browser.response.status
+    assert Message.exists?(theirs.id), "can't delete the other rider's messages"
+
+    mika_browser.get conversation_path(conversation)
+    assert_no_match "Wrong chat, sorry", mika_browser.response.body
+  end
+
   test "one conversation per pair of trips, whoever starts it" do
     wing, = rider("Wing")
     mika, = rider("Mika")

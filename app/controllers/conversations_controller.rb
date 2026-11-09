@@ -20,6 +20,8 @@ class ConversationsController < ApplicationController
     other = Trip.upcoming.find(params[:trip_id])
     if other == my_trip
       redirect_to other, notice: "That's your own trip."
+    elsif my_trip.unmatched_with?(other)
+      redirect_to other, notice: "You and #{other.name} are unmatched, so you can't message each other."
     else
       redirect_to Conversation.between(my_trip, other)
     end

@@ -36,6 +36,14 @@ class Trip < ApplicationRecord
 
   def matches(limit: 10) = Matcher.new(self).matches(limit:)
 
+  # Trips this one has unmatched, or been unmatched by (it applies both ways).
+  def unmatched_trip_ids
+    @unmatched_trip_ids ||= Unmatch.where(trip: self).pluck(:other_trip_id) +
+                            Unmatch.where(other_trip: self).pluck(:trip_id)
+  end
+
+  def unmatched_with?(other) = unmatched_trip_ids.include?(other.id)
+
   private
 
   def clean_lists

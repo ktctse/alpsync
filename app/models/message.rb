@@ -16,6 +16,7 @@ class Message < ApplicationRecord
 
   after_create_commit -> { broadcast_append_to conversation, target: "messages" }
   after_create_commit :ask_sample_rider_to_reply
+  after_destroy_commit -> { broadcast_remove_to conversation }
 
   private
 

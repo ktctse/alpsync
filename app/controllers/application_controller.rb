@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   # Contact details are only shown to riders who have posted a trip themselves,
   # so anonymous visitors and scrapers can't harvest phone numbers.
   def can_see_contact?(trip)
-    my_trip.present? || trip == my_trip
+    trip == my_trip || (my_trip.present? && !my_trip.unmatched_with?(trip))
   end
 
   # For the dot on "Messages" in the header.
