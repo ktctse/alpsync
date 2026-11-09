@@ -66,7 +66,7 @@ class ConversationsTest < ActionDispatch::IntegrationTest
     wing_browser.get root_path
     header = wing_browser.response.parsed_body.at_css("header nav")
     assert header.at_css("a[href='#{conversations_path}']"), "Messages is a real link"
-    assert header.at_css("a[href='#{trip_path(wing)}']"), "Your matches is a real link"
+    assert header.at_css("a[href='#{trip_path(wing)}']"), "Matches is a real link"
     assert_nil header.at_css("#locked_hint")
   end
 
