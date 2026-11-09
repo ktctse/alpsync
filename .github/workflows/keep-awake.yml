@@ -1,0 +1,20 @@
+name: Keep awake
+
+# Render's free plan puts the site to sleep after 15 minutes without visitors,
+# and the next visitor then waits about a minute on a loading screen. Pinging
+# the health check every 5 minutes keeps it awake, with room to spare when
+# GitHub runs a scheduled job a few minutes late.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping the health check
+        run: curl --fail --silent --show-error --max-time 90 --retry 2 https://alpsync.onrender.com/up
