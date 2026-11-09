@@ -57,7 +57,7 @@ class ConversationsTest < ActionDispatch::IntegrationTest
   test "visitors see matches and messages locked, with a hint on how to unlock them" do
     get root_path
     assert_select "header nav a[href=?]", conversations_path, 0
-    assert_select "header nav span.cursor-not-allowed", text: /matches/
+    assert_select "header nav span.cursor-not-allowed", text: "Matches"
     assert_select "header nav span.cursor-not-allowed", text: "Messages"
     assert_select "header [data-controller=hint] button[aria-describedby=locked_hint]"
     assert_select "#locked_hint[role=tooltip]", text: /Post a trip to unlock your matches and messages/
